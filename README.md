@@ -97,3 +97,8 @@ feat(breaking): API 변경으로 인한 새로운 인증 방식 도입
 fix: 특정 디바이스에서의 스타일 깨지던 현상 수정 #123
 ```
 
+## 브랜치 관리
+
+<div align="center">
+  <img width="823" alt="branch" src="https://raw.githubusercontent.com/als904204/pictz/main/img/branch.png">
+</div>
