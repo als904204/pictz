@@ -13,8 +13,9 @@ public enum ErrorType {
     BAD_REQUEST("E_400", "Bad request"),
     UNAUTHORIZED("E_401", "Unauthorized"),
     FORBIDDEN("E_403", "Forbidden"),
-    NOT_FOUND("E_404", "Not found"),
-    CONFLICT("E_409", "Conflict");
+    PAGE_NOT_FOUND("E_404", "Page Not found"),
+    CONFLICT("E_409", "Conflict"),
+    RESOURCE_NOT_FOUND("E_404", "Resource Not Found");
 
     private final String code;
     private final String message;
