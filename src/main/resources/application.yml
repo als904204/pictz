@@ -1,1 +1,8 @@
-spring.application.name=api
+spring:
+  output:
+    ansi:
+      enabled: always
+  jpa:
+    open-in-view: false
+  profiles:
+    active: test
