@@ -57,8 +57,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NoResourceFoundException.class) // 없는 페이지 요청
     @ResponseStatus(HttpStatus.NOT_FOUND)
     protected ApiErrorResponse handleResourceNotFound(Exception exception) {
-        log.warn("[NotFound] Message={}", exception.getMessage());
-        return ApiErrorResponse.fail(ErrorType.NOT_FOUND.getCode(), ErrorType.NOT_FOUND.getMessage());
+        log.warn("[PageNotFound] Message={}", exception.getMessage());
+        return ApiErrorResponse.fail(ErrorType.PAGE_NOT_FOUND.getCode(), ErrorType.PAGE_NOT_FOUND.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class) // 유효성 검사 예외 별도 핸들링
