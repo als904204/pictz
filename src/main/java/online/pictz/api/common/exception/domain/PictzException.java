@@ -3,7 +3,7 @@ package online.pictz.api.common.exception.domain;
 import org.springframework.http.HttpStatus;
 
 /**
- * 모든 커스텀 예외의 기본 클래스이며, 예외 HTTP 상태, 에러 코드, 로깅 필요 여부를 정의
+ * 모든 커스텀 예외의 기본 클래스이며, 예외 HTTP 상태, 에러 코드
  */
 public abstract class PictzException extends RuntimeException {
 
@@ -31,7 +31,5 @@ public abstract class PictzException extends RuntimeException {
     public abstract HttpStatus getHttpStatus();
 
     public abstract String getErrorCode();
-
-    public abstract boolean isNecessaryToLog();
 
 }
