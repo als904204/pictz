@@ -29,10 +29,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(PictzException.class)
     protected ResponseEntity<ApiErrorResponse> handleBusinessException(PictzException exception) {
-        if (exception.isNecessaryToLog()) {
-            log.error("[BusinessException] {}", exception.getMessage(), exception);
-        }
-
         return ResponseEntity
             .status(exception.getHttpStatus())
             .body(ApiErrorResponse.fail(exception.getErrorCode(), exception.getMessage()));
