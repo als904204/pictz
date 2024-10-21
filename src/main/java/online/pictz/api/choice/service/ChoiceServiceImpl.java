@@ -21,6 +21,9 @@ public class ChoiceServiceImpl implements ChoiceService {
     @Override
     public List<ChoiceResponse> getChoiceListByTopicId(Long topicId) {
         List<Choice> choiceList = choiceRepository.findByTopicId(topicId);
+        if (choiceList.isEmpty()) {
+            throw ChoiceNotFound.forTopicId(topicId);
+        }
         return choiceList.stream()
             .map(ChoiceResponse::new)
             .toList();
@@ -36,7 +39,7 @@ public class ChoiceServiceImpl implements ChoiceService {
     @Override
     public ChoiceVoteResult getChoiceVoteResultById(Long id) {
         Choice choice = choiceRepository.findById(id)
-            .orElseThrow(() -> new ChoiceNotFound(id));
+            .orElseThrow(() -> ChoiceNotFound.forTopicId(id));
         return new ChoiceVoteResult(choice.getName(), choice.getVoteCount());
     }
 

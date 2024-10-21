@@ -6,8 +6,16 @@ import org.springframework.http.HttpStatus;
 
 public class ChoiceNotFound extends PictzException {
 
-    public ChoiceNotFound(Long id) {
-        super(String.format("Choice with id '%d' not found", id));
+    private ChoiceNotFound(String message) {
+        super(message);
+    }
+
+    public ChoiceNotFound forChoiceId(Long choiceId) {
+        return new ChoiceNotFound("No choice found with ID: " + choiceId);
+    }
+
+    public static ChoiceNotFound forTopicId(Long topicId) {
+        return new ChoiceNotFound("No choices found for topic ID: " + topicId);
     }
 
     @Override
@@ -19,6 +27,5 @@ public class ChoiceNotFound extends PictzException {
     public String getErrorCode() {
         return ErrorType.RESOURCE_NOT_FOUND.getCode();
     }
-
 
 }
