@@ -20,8 +20,4 @@ public class TopicNotFound extends PictzException {
         return ErrorType.RESOURCE_NOT_FOUND.getCode();
     }
 
-    @Override
-    public boolean isNecessaryToLog() {
-        return true;
-    }
 }
