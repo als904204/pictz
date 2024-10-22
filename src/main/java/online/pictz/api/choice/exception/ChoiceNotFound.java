@@ -10,7 +10,7 @@ public class ChoiceNotFound extends PictzException {
         super(message);
     }
 
-    public ChoiceNotFound forChoiceId(Long choiceId) {
+    public static ChoiceNotFound forChoiceId(Long choiceId) {
         return new ChoiceNotFound("No choice found with ID: " + choiceId);
     }
 

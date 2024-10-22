@@ -39,7 +39,7 @@ public class ChoiceServiceImpl implements ChoiceService {
     @Override
     public ChoiceVoteResult getChoiceVoteResultById(Long id) {
         Choice choice = choiceRepository.findById(id)
-            .orElseThrow(() -> ChoiceNotFound.forTopicId(id));
+            .orElseThrow(() -> ChoiceNotFound.forChoiceId(id));
         return new ChoiceVoteResult(choice.getName(), choice.getVoteCount());
     }
 
