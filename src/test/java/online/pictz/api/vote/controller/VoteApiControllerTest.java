@@ -24,7 +24,7 @@ class VoteApiControllerTest {
     @InjectMocks
     private VoteApiController voteApiController;
 
-    @DisplayName("")
+    @DisplayName("투표 생성 성공")
     @Test
     void createVote_SUCCESS() {
 
