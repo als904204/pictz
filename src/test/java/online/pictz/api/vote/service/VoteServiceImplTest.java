@@ -12,7 +12,7 @@ import online.pictz.api.choice.repository.ChoiceRepository;
 import online.pictz.api.common.util.network.IpExtractor;
 import online.pictz.api.vote.dto.VoteCreate;
 import online.pictz.api.vote.dto.VoteResponse;
-import online.pictz.api.vote.mock.FakeIpExtractor;
+import online.pictz.api.mock.FakeIpExtractor;
 import online.pictz.api.vote.repository.VoteRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -37,7 +37,7 @@ class VoteServiceImplTest {
 
     @BeforeEach
     public void setUp() {
-        ipExtractor = new FakeIpExtractor();
+        ipExtractor = new FakeIpExtractor("1.1.1.1");
         voteService = new VoteServiceImpl(voteRepository, choiceRepository, ipExtractor);
     }
 
