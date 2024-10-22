@@ -8,4 +8,8 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
 
     Optional<Topic> findBySlug(String slug);
 
+    boolean existsByTitle(String title);
+
+    boolean existsBySlug(String slug);
+
 }
