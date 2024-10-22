@@ -20,7 +20,7 @@ public class VoteServiceImpl implements VoteService{
     private final IpExtractor ipExtractor;
 
     @Override
-    public VoteResponse vote(VoteCreate voteCreate) {
+    public VoteResponse createVote(VoteCreate voteCreate) {
 
         Choice choice = choiceRepository.findById(voteCreate.getChoiceId())
             .orElseThrow(() -> ChoiceNotFound.forChoiceId(voteCreate.getChoiceId()));

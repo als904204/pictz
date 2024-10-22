@@ -20,7 +20,7 @@ public class VoteApiController {
 
     @PostMapping
     public ResponseEntity<VoteResponse> createVote(@RequestBody VoteCreate voteCreate) {
-        VoteResponse voteResponse = voteService.vote(voteCreate);
+        VoteResponse voteResponse = voteService.createVote(voteCreate);
         return ResponseEntity.status(HttpStatus.CREATED).body(voteResponse);
     }
 
