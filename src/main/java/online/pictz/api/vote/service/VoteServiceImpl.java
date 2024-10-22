@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import online.pictz.api.choice.entity.Choice;
 import online.pictz.api.choice.exception.ChoiceNotFound;
 import online.pictz.api.choice.repository.ChoiceRepository;
-import online.pictz.api.common.exception.util.IpExtractor;
+import online.pictz.api.common.util.network.IpExtractor;
 import online.pictz.api.vote.dto.VoteCreate;
 import online.pictz.api.vote.dto.VoteResponse;
 import online.pictz.api.vote.entity.Vote;
