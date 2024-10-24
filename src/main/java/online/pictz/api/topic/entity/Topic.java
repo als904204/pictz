@@ -37,12 +37,6 @@ public class Topic {
     @Column(name = "thumbnail_image_url", nullable = false)
     private String thumbnailImageUrl;
 
-    @Column(name = "shared_count", nullable = false, columnDefinition = "INT default 0")
-    private int sharedCount;
-
-    @Column(name = "view_count", nullable = false, columnDefinition = "INT default 0")
-    private int viewCount;
-
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
@@ -64,8 +58,6 @@ public class Topic {
         this.slug = slug;
         this.status = status;
         this.thumbnailImageUrl = thumbnailImageUrl;
-        this.sharedCount = 0;
-        this.viewCount = 0;
         this.publishedAt = publishedAt;
         this.createdAt = createdAt;
         this.endAt = endAt;
