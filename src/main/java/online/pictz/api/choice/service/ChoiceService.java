@@ -8,12 +8,17 @@ public interface ChoiceService {
 
 
     /**
-     * topic에 관한 choice 목록 가져오기
+     * 토픽에 관한 선택지 목록 조회
      */
     List<ChoiceResponse> getChoiceListByTopicId(Long topicId);
 
     /**
-     * Choice 투표 count 결과
+     * 여러 토픽에 관한 선택지 목록 조회
+     */
+    List<ChoiceResponse> getChoiceListByTopicIds(List<Long> topicIds);
+
+    /**
+     * 선택지 투표 결과 조회
      */
     ChoiceVoteResult getChoiceVoteResultById(Long id);
 }
