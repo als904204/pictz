@@ -8,7 +8,6 @@ import online.pictz.api.topic.dto.TopicCreate;
 import online.pictz.api.topic.dto.TopicResponse;
 import online.pictz.api.topic.entity.Topic;
 import online.pictz.api.topic.exception.TopicDuplicate;
-import online.pictz.api.topic.exception.TopicNotFound;
 import online.pictz.api.topic.repository.TopicRepository;
 import org.springframework.stereotype.Service;
 
@@ -50,19 +49,6 @@ public class TopicServiceImpl implements TopicService{
         Topic savedTopic = topicRepository.save(newTopic);
 
         return TopicResponse.from(savedTopic);
-    }
-
-    /**
-     * slug로 토픽 조회
-     * @param slug 조회할 slug
-     * @return 조회된 TopicResponse
-     * @throws TopicNotFound slug에 해당하는 토픽이 존재하지 않을 경우
-     */
-    @Override
-    public TopicResponse findBySlug(String slug) {
-        log.info("Finding topic with slug: {}", slug);
-        Topic topic = topicRepository.findBySlug(slug).orElseThrow(() -> new TopicNotFound(slug));
-        return TopicResponse.from(topic);
     }
 
     /**
