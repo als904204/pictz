@@ -16,7 +16,7 @@ public class ChoiceServiceImpl implements ChoiceService {
     private final ChoiceRepository choiceRepository;
 
     /**
-     * Topic에 관한 choice 목록 가져오기
+     * 토픽에 관한 선택지 목록 조회
      */
     @Override
     public List<ChoiceResponse> getChoiceListByTopicId(Long topicId) {
@@ -30,11 +30,18 @@ public class ChoiceServiceImpl implements ChoiceService {
     }
 
     /**
-     * Choice의 투표 수 조회
-     *
-     * @param id 조회할 Choice의 ID
-     * @return Choice의 이름과 투표 수를 포함한 결과
-     * @throws ChoiceNotFound 존재하지 않는 Choice ID일 경우
+     * 여러 토픽에 관한 선택지 목록 조회
+     */
+    @Override
+    public List<ChoiceResponse> getChoiceListByTopicIds(List<Long> topicIds) {
+        return choiceRepository.findByTopicIdIn(topicIds)
+            .stream()
+            .map(ChoiceResponse::new)
+            .toList();
+    }
+
+    /**
+     * 선택지 투표 결과 조회
      */
     @Override
     public ChoiceVoteResult getChoiceVoteResultById(Long id) {

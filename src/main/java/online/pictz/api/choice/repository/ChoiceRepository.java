@@ -10,4 +10,5 @@ public interface ChoiceRepository extends JpaRepository<Choice, Long> {
 
     long countById(Long id);
 
+    List<Choice> findByTopicIdIn(List<Long> topicIds);
 }
