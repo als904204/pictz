@@ -34,8 +34,6 @@ public class TopicResponse {
             .slug(topic.getSlug())
             .status(topic.getStatus())
             .thumbnailImageUrl(topic.getThumbnailImageUrl())
-            .sharedCount(topic.getSharedCount())
-            .viewCount(topic.getViewCount())
             .createdAt(topic.getCreatedAt())
             .publishedAt(topic.getPublishedAt())
             .endAt(topic.getEndAt())

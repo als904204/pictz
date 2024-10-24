@@ -20,6 +20,9 @@ public class TopicApiController {
     private final TopicService topicService;
     private final ChoiceService choiceService;
 
+    /**
+     * 모든 토픽 조회
+     */
     @GetMapping
     public ResponseEntity<List<TopicResponse>> findAll() {
         List<TopicResponse> responseList = topicService.findAll();
@@ -32,6 +35,9 @@ public class TopicApiController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * 토픽에 해당하는 선택지 목록 조회
+     */
     @GetMapping("/{topicId}/choices")
     public ResponseEntity<List<ChoiceResponse>> getChoicesForTopic(@PathVariable Long topicId) {
         List<ChoiceResponse> choices = choiceService.getChoiceListByTopicId(topicId);
