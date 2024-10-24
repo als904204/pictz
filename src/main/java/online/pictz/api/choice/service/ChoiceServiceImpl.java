@@ -7,6 +7,9 @@ import online.pictz.api.choice.dto.ChoiceResponse;
 import online.pictz.api.choice.entity.Choice;
 import online.pictz.api.choice.exception.ChoiceNotFound;
 import online.pictz.api.choice.repository.ChoiceRepository;
+import online.pictz.api.topic.entity.Topic;
+import online.pictz.api.topic.exception.TopicNotFound;
+import online.pictz.api.topic.repository.TopicRepository;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -14,20 +17,7 @@ import org.springframework.stereotype.Service;
 public class ChoiceServiceImpl implements ChoiceService {
 
     private final ChoiceRepository choiceRepository;
-
-    /**
-     * 토픽에 관한 선택지 목록 조회
-     */
-    @Override
-    public List<ChoiceResponse> getChoiceListByTopicId(Long topicId) {
-        List<Choice> choiceList = choiceRepository.findByTopicId(topicId);
-        if (choiceList.isEmpty()) {
-            throw ChoiceNotFound.forTopicId(topicId);
-        }
-        return choiceList.stream()
-            .map(ChoiceResponse::new)
-            .toList();
-    }
+    private final TopicRepository topicRepository;
 
     /**
      * 여러 토픽에 관한 선택지 목록 조회
@@ -48,6 +38,18 @@ public class ChoiceServiceImpl implements ChoiceService {
         Choice choice = choiceRepository.findById(id)
             .orElseThrow(() -> ChoiceNotFound.forChoiceId(id));
         return new ChoiceVoteResult(choice.getName(), choice.getVoteCount());
+    }
+
+    /**
+     * 토픽 slug로 선택지 목록 조회
+     */
+    @Override
+    public List<ChoiceResponse> getChoiceListByTopicSlug(String slug) {
+        Topic topic = topicRepository.findBySlug(slug).orElseThrow(() -> new TopicNotFound(slug));
+        List<Choice> choices = choiceRepository.findByTopicId(topic.getId());
+        return choices.stream()
+            .map(ChoiceResponse::new)
+            .toList();
     }
 
 }

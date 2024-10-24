@@ -8,8 +8,6 @@ public interface TopicService {
 
     TopicResponse createTopic(TopicCreate topicCreate);
 
-    TopicResponse findBySlug(String slug);
-
     List<TopicResponse> findAll();
 
 }

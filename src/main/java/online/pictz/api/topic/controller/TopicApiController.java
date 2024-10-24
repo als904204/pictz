@@ -29,19 +29,13 @@ public class TopicApiController {
         return ResponseEntity.ok(responseList);
     }
 
-    @GetMapping("/{slug}")
-    public ResponseEntity<TopicResponse> findBySlug(@PathVariable String slug) {
-        TopicResponse response = topicService.findBySlug(slug);
-        return ResponseEntity.ok(response);
-    }
-
     /**
-     * 토픽에 해당하는 선택지 목록 조회
+     * 슬러그를 이용한 토픽의 선택지 목록 조회
      */
-    @GetMapping("/{topicId}/choices")
-    public ResponseEntity<List<ChoiceResponse>> getChoicesForTopic(@PathVariable Long topicId) {
-        List<ChoiceResponse> choices = choiceService.getChoiceListByTopicId(topicId);
-        return ResponseEntity.ok(choices);
+    @GetMapping("/{slug}/choices")
+    public ResponseEntity<List<ChoiceResponse>> getChoicesForTopicBySlug(@PathVariable String slug) {
+        List<ChoiceResponse> response = choiceService.getChoiceListByTopicSlug(slug);
+        return ResponseEntity.ok(response);
     }
 
 }

@@ -39,38 +39,6 @@ class TopicServiceImplTest {
         topicService = new TopicServiceImpl(topicRepository, timeProvider);
     }
 
-    @DisplayName("slug로 topic을 성공적으로 조회한다")
-    @Test
-    void findBySlug() {
-
-        // given
-        Topic topic = Topic.builder()
-            .suggestedTopicId(1L)
-            .title("메시 vs 호날두")
-            .slug("messi-vs-ronaldo")
-            .status(TopicStatus.ACTIVE)
-            .thumbnailImageUrl("http://example.com/image.jpg")
-            .createdAt(LocalDateTime.of(2024, 1, 1, 0, 0, 0))
-            .publishedAt(LocalDateTime.of(2024, 2, 1, 0, 0, 0))
-            .endAt(LocalDateTime.of(2024, 3, 1, 0, 0, 0))
-            .build();
-
-        var slug = "messi-vs-ronaldo";
-        when(topicRepository.findBySlug(slug)).thenReturn(Optional.of(topic));
-
-        // when
-        TopicResponse topicResponse = topicService.findBySlug(slug);
-
-        // then
-        assertThat(topicResponse.getSuggestedTopicId()).isEqualTo(1L);
-        assertThat(topicResponse.getTitle()).isEqualTo("메시 vs 호날두");
-        assertThat(topicResponse.getStatus()).isEqualTo(TopicStatus.ACTIVE);
-        assertThat(topicResponse.getThumbnailImageUrl()).isEqualTo("http://example.com/image.jpg");
-        assertThat(topicResponse.getCreatedAt()).isEqualTo(LocalDateTime.of(2024, 1, 1, 0, 0, 0));
-        assertThat(topicResponse.getPublishedAt()).isEqualTo(LocalDateTime.of(2024, 2, 1, 0, 0, 0));
-        assertThat(topicResponse.getEndAt()).isEqualTo(LocalDateTime.of(2024, 3, 1, 0, 0, 0));
-    }
-
     @DisplayName("토픽 저장에 성공한다")
     @Test
     void createTopic_SUCCESS() {
