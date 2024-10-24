@@ -6,12 +6,6 @@ import online.pictz.api.choice.dto.ChoiceVoteResult;
 
 public interface ChoiceService {
 
-
-    /**
-     * 토픽에 관한 선택지 목록 조회
-     */
-    List<ChoiceResponse> getChoiceListByTopicId(Long topicId);
-
     /**
      * 여러 토픽에 관한 선택지 목록 조회
      */

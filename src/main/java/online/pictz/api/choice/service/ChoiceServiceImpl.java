@@ -20,20 +20,6 @@ public class ChoiceServiceImpl implements ChoiceService {
     private final TopicRepository topicRepository;
 
     /**
-     * 토픽에 관한 선택지 목록 조회
-     */
-    @Override
-    public List<ChoiceResponse> getChoiceListByTopicId(Long topicId) {
-        List<Choice> choiceList = choiceRepository.findByTopicId(topicId);
-        if (choiceList.isEmpty()) {
-            throw ChoiceNotFound.forTopicId(topicId);
-        }
-        return choiceList.stream()
-            .map(ChoiceResponse::new)
-            .toList();
-    }
-
-    /**
      * 여러 토픽에 관한 선택지 목록 조회
      */
     @Override
