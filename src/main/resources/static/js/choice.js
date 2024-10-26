@@ -32,13 +32,27 @@ function renderChoices(choices) {
     const choicesContainer = document.getElementById('choices');
     choicesContainer.innerHTML = ''; // 기존 내용 초기화
 
+
+    const itemCount = choices.length;
+
+     // 선택지의 개수에 따라 컬럼 클래스 설정
+    let colClass = 'col-12 col-sm-6 mb-4 mt-3 card-hover';
+
+
+    if (itemCount === 4) {
+        colClass = 'col-12 col-sm-6 col-md-4 col-lg-3 mb-4 mt-3 card-hover'; // 4개일 때
+    } else if (itemCount === 3) {
+        colClass = 'col-12 col-sm-6 col-md-4 mb-4 mt-3 card-hover'; // 3개일 때
+    }
+
     choices.forEach(choice => {
         const colDiv = document.createElement('div');
-        colDiv.className = 'col-12 col-sm-6 col-md-4 col-lg-3 mb-4 mt-3 card-hover';
+        colDiv.className = colClass;
+
         colDiv.style.cursor = 'pointer';
 
         const cardDiv = document.createElement('div');
-        cardDiv.className = 'card h-100 shadow-sm';
+        cardDiv.className = 'card shadow-sm';
 
         const img = document.createElement('img');
         img.src = choice.imageUrl || 'https://t3.ftcdn.net/jpg/01/35/88/24/360_F_135882430_6Ytw6sJKC5jg8ovh18XjAHuMXcS7mlai.jpg';
@@ -99,13 +113,13 @@ function handleVote(choiceId) {
   debouncedSendVoteBatch();
 
   // send to server if more than 50
-  if(getTotalQueuedVotes() >= 200) {
+  if(getTotalQueuedVotes() >= 50) {
     sendVoteBatch();
   }
 }
 
-// 클릭 멈추고 0.7초 뒤 전송
-const debouncedSendVoteBatch = debounce(sendVoteBatch, 700);
+// 클릭 멈추고 0.5초 뒤 전송
+const debouncedSendVoteBatch = debounce(sendVoteBatch, 500);
 
 // 현재 큐에 쌓인 총 투표 수를 반환하는 함수
 function getTotalQueuedVotes() {
@@ -131,12 +145,12 @@ function sendVoteBatch() {
   .then(response => {
     if(!response.ok) {
       voteQueue = {};
+      alert('잘못된 요청입니다1')
       throw new Error(`Error sending vote batch! status: ${response.status}`);
     }
     return response.json();
   })
   .then(data => {
-    console.log('Vote batch sent successfully : ', data);
     voteQueue = {};
 
     data.forEach(choice => { // 서버에서 모든 선택지를 반환한다고 가정
@@ -148,7 +162,8 @@ function sendVoteBatch() {
 
   })
   .catch(error => {
-    console.error('Error sending vote batch : ', error);
+    console.log(error)
+    alert('잘못된 요청입니다2')
     voteQueue = {};
   })
 
