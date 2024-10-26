@@ -1,8 +1,10 @@
 package online.pictz.api.vote.service;
 
-import online.pictz.api.vote.dto.VoteCreate;
-import online.pictz.api.vote.dto.VoteResponse;
+import java.util.List;
+import online.pictz.api.vote.dto.VoteRequest;
 
 public interface VoteService {
-    VoteResponse createVote(VoteCreate voteCreate);
+
+    void voteBulk(List<VoteRequest> voteRequest);
+
 }

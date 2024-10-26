@@ -1,10 +1,9 @@
 package online.pictz.api.vote.controller;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import online.pictz.api.vote.dto.VoteCreate;
-import online.pictz.api.vote.dto.VoteResponse;
+import online.pictz.api.vote.dto.VoteRequest;
 import online.pictz.api.vote.service.VoteService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,10 +17,13 @@ public class VoteApiController {
 
     private final VoteService voteService;
 
-    @PostMapping
-    public ResponseEntity<VoteResponse> createVote(@RequestBody VoteCreate voteCreate) {
-        VoteResponse voteResponse = voteService.createVote(voteCreate);
-        return ResponseEntity.status(HttpStatus.CREATED).body(voteResponse);
+    /**
+     * 투표 일괄 처리
+     */
+    @PostMapping("/bulk")
+    public ResponseEntity<Void> voteBulk(@RequestBody List<VoteRequest> voteRequest) {
+        voteService.voteBulk(voteRequest);
+        return ResponseEntity.noContent().build();
     }
 
 }

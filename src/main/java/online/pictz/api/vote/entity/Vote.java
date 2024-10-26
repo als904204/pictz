@@ -20,20 +20,23 @@ public class Vote {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "choice_id")
+    @Column(name = "choice_id", nullable = false)
     private Long choiceId;
 
-    @Column(name = "ip")
+    @Column(name = "ip", nullable = false)
     private String ip;
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+    @Column(name = "voted_at", nullable = false)
+    private LocalDateTime votedAt;
+
+    private int count;
 
     @Builder
-    public Vote(Long choiceId, String ip, LocalDateTime createdAt) {
+    public Vote(Long choiceId, String ip, LocalDateTime votedAt, int count) {
         this.choiceId = choiceId;
         this.ip = ip;
-        this.createdAt = createdAt;
+        this.votedAt = votedAt;
+        this.count = count;
     }
 
     protected Vote() {}
