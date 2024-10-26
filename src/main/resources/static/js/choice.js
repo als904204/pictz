@@ -145,25 +145,16 @@ function sendVoteBatch() {
   .then(response => {
     if(!response.ok) {
       voteQueue = {};
-      alert('잘못된 요청입니다1')
+      alert('잘못된 요청입니다')
       throw new Error(`Error sending vote batch! status: ${response.status}`);
     }
     return response.json();
   })
   .then(data => {
     voteQueue = {};
-
-    data.forEach(choice => { // 서버에서 모든 선택지를 반환한다고 가정
-        const voteCountSpan = document.getElementById(`vote-count-${choice.choiceId}`);
-        if(voteCountSpan){
-            voteCountSpan.textContent = choice.voteCount;
-        }
-    });
-
   })
   .catch(error => {
-    console.log(error)
-    alert('잘못된 요청입니다2')
+    alert('잘못된 요청입니다')
     voteQueue = {};
   })
 
