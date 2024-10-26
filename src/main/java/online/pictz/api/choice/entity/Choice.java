@@ -40,7 +40,7 @@ public class Choice {
         this.voteCount = 0;
     }
 
-    public void incrementVoteCount() {
-        this.voteCount += 1;
+    public void updateVoteCount(int voteCount) {
+        this.voteCount += voteCount;
     }
 }
