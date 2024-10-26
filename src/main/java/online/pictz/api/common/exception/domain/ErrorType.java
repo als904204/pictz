@@ -15,7 +15,8 @@ public enum ErrorType {
     FORBIDDEN("E_403", "Forbidden"),
     PAGE_NOT_FOUND("E_404", "Page Not found"),
     CONFLICT("E_409", "Conflict"),
-    RESOURCE_NOT_FOUND("E_404", "Resource Not Found");
+    RESOURCE_NOT_FOUND("E_404", "Resource Not Found"),
+    TOO_MANY_REQUESTS("E_429", "Too Many Requests");
 
     private final String code;
     private final String message;
