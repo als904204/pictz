@@ -121,7 +121,7 @@ function sendVoteBatch() {
       count: voteQueue[choiceId]
   }));
 
-  fetch('/api/v1/votes/batch', {
+  fetch('/api/v1/votes/bulk', {
     method: 'POST',
     headers: {
       'Content-Type' : 'application/json'
