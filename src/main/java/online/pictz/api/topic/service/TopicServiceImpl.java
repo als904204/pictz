@@ -1,6 +1,7 @@
 package online.pictz.api.topic.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import online.pictz.api.common.util.time.TimeProvider;
@@ -61,7 +62,7 @@ public class TopicServiceImpl implements TopicService{
         return topicRepository.findAll()
             .stream()
             .map(TopicResponse::from)
-            .toList();
+            .collect(Collectors.toList());
     }
 
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import online.pictz.api.vote.dto.VoteRequest;
 import online.pictz.api.vote.entity.Vote;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,7 @@ public class VoteConverter {
     public List<Long> convertToChoiceIds(List<VoteRequest> voteRequests) {
         return voteRequests.stream()
             .map(VoteRequest::getChoiceId)
-            .toList();
+            .collect(Collectors.toList());
     }
 
     /**
