@@ -1,6 +1,7 @@
 package online.pictz.api.choice.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import online.pictz.api.choice.dto.ChoiceVoteResult;
 import online.pictz.api.choice.dto.ChoiceResponse;
@@ -27,7 +28,7 @@ public class ChoiceServiceImpl implements ChoiceService {
         return choiceRepository.findByTopicIdIn(topicIds)
             .stream()
             .map(ChoiceResponse::new)
-            .toList();
+            .collect(Collectors.toList());
     }
 
     /**
@@ -49,7 +50,7 @@ public class ChoiceServiceImpl implements ChoiceService {
         List<Choice> choices = choiceRepository.findByTopicId(topic.getId());
         return choices.stream()
             .map(ChoiceResponse::new)
-            .toList();
+            .collect(Collectors.toList());
     }
 
 }

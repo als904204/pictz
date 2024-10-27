@@ -12,13 +12,14 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.servlet.resource.NoResourceFoundException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 /**
  * 전역에서 발생하는 글로벌 예외처리 핸들러
@@ -42,7 +43,8 @@ public class GlobalExceptionHandler {
         HttpMediaTypeNotSupportedException.class,      // 요청한 미디어 타입(Content-Type)이 서버가 지원하지 않을 때
         HttpMediaTypeNotAcceptableException.class,     // 서버가 해당 미디어 타입으로 응답을 생성할 수 없을 때
         BindException.class,                           // 폼 객체를 모델 객체에 바인딩 할 때(폼 데이터의 바인딩 과정에서 유효성 검사 실패나 타입 불일치 등)
-        InvalidDataAccessApiUsageException.class       // @Valid 를 사용하지 않은 채 body 값 누락되었을 때
+        InvalidDataAccessApiUsageException.class ,      // @Valid 를 사용하지 않은 채 body 값 누락되었을 때
+        HttpRequestMethodNotSupportedException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ApiErrorResponse handleBadRequest(Exception exception) {
@@ -50,7 +52,7 @@ public class GlobalExceptionHandler {
         return ApiErrorResponse.fail(ErrorType.BAD_REQUEST.getCode(), ErrorType.BAD_REQUEST.getMessage());
     }
 
-    @ExceptionHandler(NoResourceFoundException.class) // 없는 페이지 요청
+    @ExceptionHandler(NoHandlerFoundException.class) // 없는 페이지 요청
     @ResponseStatus(HttpStatus.NOT_FOUND)
     protected ApiErrorResponse handleResourceNotFound(Exception exception) {
         log.warn("[PageNotFound] Message={}", exception.getMessage());

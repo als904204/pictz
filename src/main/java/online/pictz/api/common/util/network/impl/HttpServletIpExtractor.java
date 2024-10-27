@@ -1,6 +1,6 @@
 package online.pictz.api.common.util.network.impl;
 
-import jakarta.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import online.pictz.api.common.util.network.IpExtractor;
 import org.springframework.stereotype.Component;
 
