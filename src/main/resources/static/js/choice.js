@@ -143,9 +143,8 @@ function sendVoteBatch() {
     body: JSON.stringify(batch)
   })
   .then(response => {
-    if(!response.ok) {
+    if(!response.noContent) {
       voteQueue = {};
-      alert('잘못된 요청입니다')
       throw new Error(`Error sending vote batch! status: ${response.status}`);
     }
     return response.json();
@@ -154,7 +153,6 @@ function sendVoteBatch() {
     voteQueue = {};
   })
   .catch(error => {
-    alert('잘못된 요청입니다')
     voteQueue = {};
   })
 
