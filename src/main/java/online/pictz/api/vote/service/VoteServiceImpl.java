@@ -27,7 +27,7 @@ public class VoteServiceImpl implements VoteService{
 
     @Transactional
     @Override
-    public void voteBulk(List<VoteRequest> voteRequests) {
+    public synchronized void voteBulk(List<VoteRequest> voteRequests) {
 
         // 매크로 검증
         voteValidator.validateVoteMacro(voteRequests);
