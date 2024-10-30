@@ -14,6 +14,10 @@ public class VoteTooManyRequests extends PictzException {
         return new VoteTooManyRequests("Too many vote requests : " + voteCount);
     }
 
+    public static VoteTooManyRequests of(String message) {
+        return new VoteTooManyRequests("Too many vote request at the same time : " + message);
+    }
+
 
     @Override
     public HttpStatus getHttpStatus() {

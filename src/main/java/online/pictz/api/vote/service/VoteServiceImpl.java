@@ -10,7 +10,9 @@ import online.pictz.api.common.util.network.IpExtractor;
 import online.pictz.api.common.util.time.TimeProvider;
 import online.pictz.api.vote.dto.VoteRequest;
 import online.pictz.api.vote.entity.Vote;
+import online.pictz.api.vote.exception.VoteTooManyRequests;
 import online.pictz.api.vote.repository.VoteRepository;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,34 +26,45 @@ public class VoteServiceImpl implements VoteService{
     private final TimeProvider timeProvider;
     private final VoteConverter voteConverter;
     private final VoteValidator voteValidator;
+    private static final int MAX_RETRY = 30;
 
     @Transactional
     @Override
-    public synchronized void voteBulk(List<VoteRequest> voteRequests) {
+    public void voteBulk(List<VoteRequest> voteRequests) {
+        int retryCount = 0;
+        while (true) {
+            try {
+                // 매크로 검증
+                voteValidator.validateVoteMacro(voteRequests);
 
-        // 매크로 검증
-        voteValidator.validateVoteMacro(voteRequests);
+                // 요청한 선택지 ID 값 목록 추출
+                List<Long> choiceIds = voteConverter.convertToChoiceIds(voteRequests);
+                List<Choice> choices = choiceRepository.findAllById(choiceIds);
 
-        // 요청한 선택지 ID 값 목록 추출
-        List<Long> choiceIds = voteConverter.convertToChoiceIds(voteRequests);
-        List<Choice> choices = choiceRepository.findAllById(choiceIds);
+                // 투표 수 choice ID에 맞게 업데이트
+                Map<Long, Integer> voteCountMap = voteConverter.convertToVoteCountMap(voteRequests);
 
-        // 투표 수 choice ID에 맞게 업데이트
-        Map<Long, Integer> voteCountMap = voteConverter.convertToVoteCountMap(voteRequests);
 
-        choices.forEach(choice -> {
-            int countToAdd = voteCountMap.getOrDefault(choice.getId(),0);
-            choice.updateVoteCount(countToAdd);
-        });
+                choices.forEach(choice -> {
+                    int countToAdd = voteCountMap.getOrDefault(choice.getId(),0);
+                    choice.updateVoteCount(countToAdd);
+                });
 
-        choiceRepository.saveAll(choices);
+                choiceRepository.saveAll(choices);
 
-        // 투표 정보 저장
-        String ip = ipExtractor.extractIp();
-        List<Vote> votesToSave = voteConverter.convertToVoteEntities(voteRequests, ip, timeProvider.getCurrentTime());
 
-        voteRepository.saveAll(votesToSave);
+                // 투표 정보 저장
+                String ip = ipExtractor.extractIp();
+                List<Vote> votesToSave = voteConverter.convertToVoteEntities(voteRequests, ip, timeProvider.getCurrentTime());
 
+                voteRepository.saveAll(votesToSave);
+                break;
+            } catch (OptimisticLockingFailureException e) {
+                ++retryCount;
+                if (retryCount > MAX_RETRY) {
+                    throw VoteTooManyRequests.of(e.getMessage());
+                }
+            }
+        }
     }
-
 }
