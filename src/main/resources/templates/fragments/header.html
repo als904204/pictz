@@ -21,10 +21,18 @@
 
         </div>
         <div class="navbar-nav ms-auto">
-          <a class="nav-item nav-link d-flex align-items-center me-3" href="#">
+          <a sec:authorize="!isAuthenticated()" class="nav-item nav-link d-flex align-items-center me-3" th:href="@{/oauth2/authorization/google}">
             <i class="bi bi-box-arrow-in-right me-2"></i>
             Login
           </a>
+          <div th:if="${#authorization.expression('isAuthenticated()')}">
+            <form th:action="@{/logout}" method="post" style="display:inline;">
+              <button type="submit" class="nav-item nav-link btn btn-link d-flex align-items-center me-3" style="text-decoration: none;">
+                <i class="bi bi-box-arrow-left me-2"></i>
+                Logout
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
