@@ -50,6 +50,8 @@ public class SecurityConfig {
             .formLogin().disable()
             .logout(logout -> logout
                 .logoutUrl("/api/v1/auth/logout")
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
                 .logoutSuccessHandler(
                     (request, response, authentication) -> SecurityContextHolder.clearContext())
             )
