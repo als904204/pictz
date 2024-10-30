@@ -2,16 +2,21 @@ package online.pictz.api.common.config;
 
 import static org.springframework.http.HttpMethod.POST;
 
+import lombok.RequiredArgsConstructor;
+import online.pictz.api.user.service.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+@RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     private static final String[] WHITE_STATIC_LIST_URL = {
         "/",
@@ -39,6 +44,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+            .formLogin().disable()
+            .httpBasic().disable()
             .csrf(csrf -> csrf
                 .ignoringAntMatchers(WHITE_CSRF_LIST_URL)
             )
@@ -47,13 +54,18 @@ public class SecurityConfig {
                 .antMatchers(WHITE_API_LIST_URL).permitAll()
                 .anyRequest().authenticated()
             )
-            .formLogin().disable()
+            .oauth2Login(oauth2 -> oauth2
+                .loginPage("/login")
+                .userInfoEndpoint()
+                .userService(customOAuth2UserService)
+                .and()
+                .defaultSuccessUrl("/", true)
+            )
             .logout(logout -> logout
-                .logoutUrl("/api/v1/auth/logout")
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout", POST.name()))
+                .logoutSuccessUrl("/")
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
-                .logoutSuccessHandler(
-                    (request, response, authentication) -> SecurityContextHolder.clearContext())
             )
             .build();
     }
