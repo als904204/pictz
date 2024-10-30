@@ -21,9 +21,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+/**
+ * 통합 테스트
+ */
 @ActiveProfiles("test")
 @SpringBootTest
-class VoteServiceImplTest {
+class VoteServiceImplIntegrationTest {
 
     @Autowired
     private ChoiceRepository choiceRepository;
@@ -52,9 +55,9 @@ class VoteServiceImplTest {
 
     @DisplayName("동시에 다수가 투표하더라도 모두 업데이트 되어야 한다")
     @Test
-    void voteBulk() throws InterruptedException{
+    void voteBulk() throws InterruptedException {
 
-        // 3명의 유저가 있다고 가정
+        // 50명의 유저가 있다고 가정
         int userCount = 50;
 
         // ThreadPool 크기
@@ -77,8 +80,10 @@ class VoteServiceImplTest {
         for (int i = 0; i < userCount; i++) {
             executorService.submit(() -> {
                 try {
-                    // when
                     voteService.voteBulk(request);
+                } catch (Exception e) {
+                    // 예외 로그 기록
+                    e.printStackTrace();
                 } finally {
                     latch.countDown();
                 }
@@ -88,8 +93,10 @@ class VoteServiceImplTest {
         latch.await();
 
         // then
-        int expectedVoteCountForMessi = userCount * tenVotes;    // 실시간 투표 유저 수 * 투표한 count 수 (50 * 2 = 100)
-        int expectedVoteCountForRonaldo = userCount * twoVotes;   // 실시간 투표 유저 수 * 투표한 count 수 (50 * 4 = 200)
+        int expectedVoteCountForMessi =
+            userCount * tenVotes;    // 실시간 투표 유저 수 * 투표한 count 수 (50 * 10 = 500)
+        int expectedVoteCountForRonaldo =
+            userCount * twoVotes;   // 실시간 투표 유저 수 * 투표한 count 수 (50 * 4 = 1000)
 
         Choice messiChoice = choiceRepository.findById(messiChoiceId).orElseThrow();
         Choice ronaldoChoice = choiceRepository.findById(ronaldoChoiceId).orElseThrow();
@@ -97,9 +104,7 @@ class VoteServiceImplTest {
         assertThat(messiChoice.getVoteCount()).isEqualTo(expectedVoteCountForMessi);
         assertThat(ronaldoChoice.getVoteCount()).isEqualTo(expectedVoteCountForRonaldo);
 
-
         executorService.shutdown();
     }
-
 
 }
