@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import lombok.Getter;
 
 @Getter
@@ -28,6 +29,9 @@ public class Choice {
 
     @Column(name = "vote_count", columnDefinition = "INT default 0")
     private int voteCount;
+
+    @Version
+    private int version;
 
     protected Choice() {
 
