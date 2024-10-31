@@ -8,19 +8,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 
-@ToString
 @Entity
 @Table(name = "site_users")
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class SiteUser {
 
     @Id
@@ -33,4 +25,12 @@ public class SiteUser {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private SiteUserRole role;
+
+    protected SiteUser() {}
+
+    public SiteUser(String providerId) {
+        this.providerId = providerId;
+        this.role = SiteUserRole.ROLE_USER;
+    }
+
 }
