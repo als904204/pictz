@@ -1,20 +1,20 @@
 package online.pictz.api.user.service;
 
-import java.util.Collections;
-import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
+import online.pictz.api.user.entity.CustomOAuth2User;
 import online.pictz.api.user.entity.SiteUser;
-import online.pictz.api.user.entity.SiteUserRole;
 import online.pictz.api.user.repository.SiteUserRepository;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+/**
+ * OAuth2 인증 후 사용자 회원가입 or 로그인
+ */
 @Service
 @RequiredArgsConstructor
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
@@ -34,23 +34,10 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         String providerId = (String) attributes.get(userNameAttributeName);
 
-        Optional<SiteUser> optionalUser = siteUserRepository.findByProviderId(providerId);
+        SiteUser siteUser = siteUserRepository.findByProviderId(providerId)
+            .orElseGet(() -> siteUserRepository.save(new SiteUser(providerId)));
 
-        SiteUser siteUser;
-        if (optionalUser.isPresent()) {
-            siteUser = optionalUser.get();
-        } else {
-            siteUser = SiteUser.builder()
-                .providerId(providerId)
-                .role(SiteUserRole.ROLE_USER)
-                .build();
-            siteUserRepository.save(siteUser);
-        }
-
-        return new DefaultOAuth2User(
-            Collections.singleton(new SimpleGrantedAuthority(siteUser.getRole().name())),
-            attributes,
-            userNameAttributeName
-        );
+        return new CustomOAuth2User(siteUser, attributes);
     }
+
 }
