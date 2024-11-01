@@ -28,8 +28,10 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         DefaultOAuth2UserService delegate = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
 
-        String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails()
-            .getUserInfoEndpoint().getUserNameAttributeName();
+        String userNameAttributeName = userRequest.getClientRegistration()
+            .getProviderDetails()
+            .getUserInfoEndpoint()
+            .getUserNameAttributeName();
 
         var attributes = oAuth2User.getAttributes();
 
@@ -42,7 +44,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                 return siteUserRepository.save(newUser);
             });
 
-        return new CustomOAuth2User(siteUser, attributes);
+        return new CustomOAuth2User(siteUser);
     }
 
 }
