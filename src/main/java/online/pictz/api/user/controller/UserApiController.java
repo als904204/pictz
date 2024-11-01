@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserApiController {
 
-    @GetMapping("/me")
-    public ResponseEntity<UserDto> me(@CurrentUser UserDto userDto) {
+    @GetMapping("/profile")
+    public ResponseEntity<UserDto> profile(@CurrentUser UserDto userDto) {
         return ResponseEntity.ok(userDto);
     }
 
