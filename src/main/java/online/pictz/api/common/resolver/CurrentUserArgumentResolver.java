@@ -39,7 +39,7 @@ public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolve
 
         if (principal instanceof CustomOAuth2User) {
             CustomOAuth2User customUser = (CustomOAuth2User) principal;
-            return new UserDto(customUser.getSiteUserId(), customUser.getProviderId());
+            return new UserDto(customUser.getSiteUserId(), customUser.getName());
         }
 
         throw UserUnauthorized.of();

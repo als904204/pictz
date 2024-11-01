@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
     private final SiteUserRepository siteUserRepository;
+    private final NicknameGenerator nicknameGenerator;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -27,17 +28,23 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         DefaultOAuth2UserService delegate = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
 
-        String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails()
-            .getUserInfoEndpoint().getUserNameAttributeName();
+        String userNameAttributeName = userRequest.getClientRegistration()
+            .getProviderDetails()
+            .getUserInfoEndpoint()
+            .getUserNameAttributeName();
 
         var attributes = oAuth2User.getAttributes();
 
         String providerId = (String) attributes.get(userNameAttributeName);
 
         SiteUser siteUser = siteUserRepository.findByProviderId(providerId)
-            .orElseGet(() -> siteUserRepository.save(new SiteUser(providerId)));
+            .orElseGet(() -> {
+                String randomNickname = nicknameGenerator.generateNickname();
+                SiteUser newUser = new SiteUser(randomNickname, providerId);
+                return siteUserRepository.save(newUser);
+            });
 
-        return new CustomOAuth2User(siteUser, attributes);
+        return new CustomOAuth2User(siteUser);
     }
 
 }

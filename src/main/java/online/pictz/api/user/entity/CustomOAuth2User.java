@@ -10,18 +10,16 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 public class CustomOAuth2User implements OAuth2User {
 
     private final SiteUser siteUser;
-    private final Map<String, Object> attributes;
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public CustomOAuth2User(SiteUser siteUser, Map<String, Object> attributes) {
+    public CustomOAuth2User(SiteUser siteUser) {
         this.siteUser = siteUser;
-        this.attributes = Collections.unmodifiableMap(attributes);
         this.authorities = Collections.singleton(new SimpleGrantedAuthority(siteUser.getRole().name()));
     }
 
     @Override
     public Map<String, Object> getAttributes() {
-        return attributes;
+        return Collections.emptyMap();
     }
 
     @Override
@@ -31,7 +29,7 @@ public class CustomOAuth2User implements OAuth2User {
 
     @Override
     public String getName() {
-        return siteUser.getProviderId();
+        return siteUser.getNickname();
     }
 
     public Long getSiteUserId() {
@@ -41,4 +39,5 @@ public class CustomOAuth2User implements OAuth2User {
     public String getProviderId() {
         return siteUser.getProviderId();
     }
+
 }
