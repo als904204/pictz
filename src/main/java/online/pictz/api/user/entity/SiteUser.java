@@ -22,13 +22,17 @@ public class SiteUser {
     @Column(unique = true, nullable = false)
     private String providerId;
 
+    @Column(unique = true, nullable = false)
+    private String nickname;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private SiteUserRole role;
 
     protected SiteUser() {}
 
-    public SiteUser(String providerId) {
+    public SiteUser(String nickname, String providerId) {
+        this.nickname = nickname;
         this.providerId = providerId;
         this.role = SiteUserRole.ROLE_USER;
     }
