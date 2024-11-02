@@ -6,8 +6,15 @@ import org.springframework.http.HttpStatus;
 
 public class UserNotFound extends PictzException {
 
-    public UserNotFound(String providerId) {
-        super(String.format("User with providerId '%s' not found", providerId));
+    public UserNotFound(String message) {
+        super(message);
+    }
+
+    public static UserNotFound of(String providerId) {
+        return new UserNotFound(String.format("User with providerId '%s' not found", providerId));
+    }
+    public static UserNotFound of(Long id) {
+        return new UserNotFound(String.format("User with id '%s' not found", id));
     }
 
     @Override
