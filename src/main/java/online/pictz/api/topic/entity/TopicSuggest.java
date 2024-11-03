@@ -29,7 +29,10 @@ public class TopicSuggest {
     private String title;
 
     @Column(nullable = false, columnDefinition = "TEXT")
-    private String content;
+    private String description;
+
+    @Column(name = "thumbnail_url", nullable = false)
+    private String thumbnailUrl;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
@@ -48,11 +51,13 @@ public class TopicSuggest {
     protected TopicSuggest() {}
 
     @Builder
-    public TopicSuggest(String title, String content, SiteUser user, LocalDateTime createdAt) {
+    public TopicSuggest(String title, String description, SiteUser user, LocalDateTime createdAt,
+        String thumbnailUrl, TopicSuggestStatus status) {
         this.title = title;
-        this.content = content;
+        this.description = description;
         this.user = user;
         this.createdAt = createdAt;
-        this.status = TopicSuggestStatus.PENDING;
+        this.status = status;
+        this.thumbnailUrl = thumbnailUrl;
     }
 }

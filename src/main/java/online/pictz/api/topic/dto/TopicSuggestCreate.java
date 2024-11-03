@@ -2,12 +2,12 @@ package online.pictz.api.topic.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 public class TopicSuggestCreate {
     private String title;
-    private String content;
+    private String description;
+    private MultipartFile thumbnail;
 }
