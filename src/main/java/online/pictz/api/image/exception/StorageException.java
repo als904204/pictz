@@ -1,5 +1,6 @@
 package online.pictz.api.image.exception;
 
+import online.pictz.api.common.exception.domain.ErrorType;
 import online.pictz.api.common.exception.domain.PictzException;
 import org.springframework.http.HttpStatus;
 
@@ -28,11 +29,11 @@ public class StorageException extends PictzException {
 
     @Override
     public HttpStatus getHttpStatus() {
-        return null;
+        return HttpStatus.BAD_REQUEST;
     }
 
     @Override
     public String getErrorCode() {
-        return "";
+        return ErrorType.BAD_REQUEST.getCode();
     }
 }
