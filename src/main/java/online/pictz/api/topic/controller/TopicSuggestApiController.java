@@ -7,10 +7,11 @@ import online.pictz.api.topic.dto.TopicSuggestCreate;
 import online.pictz.api.topic.dto.TopicSuggestResponse;
 import online.pictz.api.topic.service.TopicSuggestService;
 import online.pictz.api.user.dto.UserDto;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,8 +22,8 @@ public class TopicSuggestApiController {
 
     private final TopicSuggestService topicSuggestService;
 
-    @PostMapping
-    public ResponseEntity<TopicSuggestResponse> create(@CurrentUser UserDto userDto, @RequestBody
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<TopicSuggestResponse> create(@CurrentUser UserDto userDto, @ModelAttribute
     TopicSuggestCreate topicSuggestCreate) {
         TopicSuggestResponse response = topicSuggestService.createSuggest(userDto.getId(),
             topicSuggestCreate);
