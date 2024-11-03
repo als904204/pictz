@@ -1,0 +1,53 @@
+.hover-effect {
+    transition: all 0.3s ease;
+    background-color: #f8f9fa;
+    text-decoration: none;
+}
+
+.hover-effect:hover {
+    transform: translateY(-2px);
+    background-color: #e9ecef;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+}
+
+.game-icon {
+    font-size: 1.5rem;
+    animation: bounce 2s infinite;
+}
+
+.brand-text {
+    color: #2c3e50;
+    letter-spacing: 0.5px;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-3px);
+    }
+}
+
+.hover-lift {
+    transition: transform 0.2s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-2px);
+}
+
+.hover-dark:hover {
+    color: #212529 !important;
+    text-decoration: none;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+    .game-icon {
+        font-size: 1.2rem;
+    }
+    .brand-text {
+        font-size: 0.9rem;
+    }
+}
