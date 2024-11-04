@@ -30,7 +30,7 @@
       </div>
       <div class="card shadow-sm">
         <div class="card-body">
-          <h3 class="card-title text-center mb-4">컨텐츠 생성하기</h3>
+          <h3 class="card-title text-center mb-4">컨텐츠 문의하기</h3>
 
           <form id="suggest-form" enctype="multipart/form-data">
             <div class="mb-3">
@@ -46,6 +46,26 @@
             <div class="mb-3">
               <label for="thumbnail" class="form-label font-weight-bold text-primary">썸네일 사진</label>
               <input class="form-control" type="file" id="thumbnail" name="thumbnail" accept="image/*" required>
+            </div>
+
+            <!-- 선택지 이미지 업로드 섹션 -->
+            <div class="mb-3">
+              <label class="form-label font-weight-bold text-primary">선택지 이미지</label>
+              <div id="choice-images-container">
+                <!-- 초기 선택지 이미지 필드 (최소 2개) -->
+                <div class="input-group mb-2 choice-image-group">
+                  <input type="file" class="form-control choice-image-input" name="choiceImages" accept="image/*" required>
+                </div>
+                <div class="input-group mb-2 choice-image-group">
+                  <input type="file" class="form-control choice-image-input" name="choiceImages" accept="image/*" required>
+                </div>
+              </div>
+              <button type="button" id="add-choice-image-btn" class="btn btn-secondary">
+                선택지 이미지 추가
+              </button>
+              <small class="form-text text-muted">
+                최소 2개, 최대 4개의 선택지 이미지를 업로드할 수 있습니다.
+              </small>
             </div>
 
             <button type="submit" class="btn btn-primary w-100">제출</button>
