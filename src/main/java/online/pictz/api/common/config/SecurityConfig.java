@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import online.pictz.api.user.service.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -14,6 +15,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
@@ -53,6 +55,8 @@ public class SecurityConfig {
             .authorizeRequests(auth -> auth
                 .antMatchers(WHITE_STATIC_LIST_URL).permitAll()
                 .antMatchers(WHITE_API_LIST_URL).permitAll()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/api/v1/admin/**").hasRole("ADMIN")
                 .antMatchers("login").anonymous()
                 .anyRequest().authenticated()
             )
