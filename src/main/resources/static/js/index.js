@@ -55,7 +55,7 @@ function renderTopicList(topics) {
       const detailButton = document.createElement('a');
       detailButton.href = `/topics/${topic.slug}`; // 상세 페이지 URL (필요 시 수정)
       detailButton.className = 'btn btn-primary mt-auto';
-      detailButton.textContent = '투표하기';
+      detailButton.textContent = '투표하러가기';
 
       // 선택지 컨테이너 추가
       const choicesContainer = document.createElement('div');
@@ -75,7 +75,7 @@ function renderTopicList(topics) {
 
 /** 
 * Topic에 해당하는 투표 정보 결과 요청
-*/
+
 function loadChoicesForTopics(topicIds) {
   if (topicIds.length === 0) return;
 
@@ -98,10 +98,11 @@ function loadChoicesForTopics(topicIds) {
           console.error('Error fetching choices:', error);
       });
 }
+*/
 
 /** 
 * Topic에 해당하는 투표 정보 결과 랜더링
-*/
+
 function renderChoices(choices) {
   choices.forEach(choice => {
       // 선택지에 해당하는 토픽 카드 찾기
@@ -117,4 +118,4 @@ function renderChoices(choices) {
       }
   });
 }
-
+*/

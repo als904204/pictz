@@ -35,7 +35,7 @@ function loadInquiries() {
 
     loadingElement.style.display = 'block';
 
-    fetch('/api/v1/users/inquiries')
+    fetch('/api/v1/topic_suggests')
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);

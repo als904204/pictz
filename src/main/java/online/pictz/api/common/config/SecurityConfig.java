@@ -53,6 +53,7 @@ public class SecurityConfig {
             .authorizeRequests(auth -> auth
                 .antMatchers(WHITE_STATIC_LIST_URL).permitAll()
                 .antMatchers(WHITE_API_LIST_URL).permitAll()
+                .antMatchers("login").anonymous()
                 .anyRequest().authenticated()
             )
             .oauth2Login(oauth2 -> oauth2
@@ -70,4 +71,5 @@ public class SecurityConfig {
             )
             .build();
     }
+
 }
