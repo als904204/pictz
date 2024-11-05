@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+<head>
+  <title>Profile</title>
+  <link rel="stylesheet" th:href="@{/css/admin/suggest-detail.css}">
+  <script defer th:src="@{/js/admin/suggest-detail.js}"></script>
+</head>
+
+<<body>
+<div layout:fragment="content">
+  <div class="container py-5">
+    <div class="detail-card">
+      <div class="d-flex justify-content-between align-items-start mb-4">
+        <h1 class="h2 mb-0" id="detailTitle">토픽 제목</h1>
+        <span class="status-badge bg-primary text-white" id="detailStatus">상태</span>
+      </div>
+
+      <div class="meta-info mb-4">
+        <div class="row">
+          <div class="col-md-6">
+            <i class="bi bi-person-circle"></i>
+            <strong>요청자:</strong> <span id="detailNickname">닉네임</span>
+          </div>
+          <div class="col-md-6">
+            <i class="bi bi-calendar3"></i>
+            <strong>요청일:</strong> <span id="detailCreatedAt">2024-04-27 12:34</span>
+          </div>
+        </div>
+      </div>
+
+      <section class="mb-4">
+        <h4 class="section-title">설명</h4>
+        <p class="lead" id="detailDescription">토픽 설명</p>
+      </section>
+
+      <section class="mb-4">
+        <h4 class="section-title">썸네일</h4>
+        <div class="thumbnail-container">
+          <img id="detailThumbnail" src="" alt="썸네일">
+        </div>
+      </section>
+
+      <section>
+        <h4 class="section-title">선택지 이미지</h4>
+        <div id="detailImages" class="d-flex flex-wrap justify-content-start gap-3">
+          <!-- Images will be dynamically added here -->
+        </div>
+      </section>
+    </div>
+
+    <a href="/admin/settings" class="btn btn-primary back-button">
+      <i class="bi bi-arrow-left me-2"></i>목록으로 돌아가기
+    </a>
+  </div>
+</div>
+
+</body>
+</html>
