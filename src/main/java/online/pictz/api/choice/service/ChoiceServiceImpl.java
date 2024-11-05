@@ -46,7 +46,7 @@ public class ChoiceServiceImpl implements ChoiceService {
      */
     @Override
     public List<ChoiceResponse> getChoiceListByTopicSlug(String slug) {
-        Topic topic = topicRepository.findBySlug(slug).orElseThrow(() -> new TopicNotFound(slug));
+        Topic topic = topicRepository.findBySlug(slug).orElseThrow(() -> TopicNotFound.bySlug(slug));
         List<Choice> choices = choiceRepository.findByTopicId(topic.getId());
         return choices.stream()
             .map(ChoiceResponse::new)

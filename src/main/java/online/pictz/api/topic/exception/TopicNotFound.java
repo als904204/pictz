@@ -6,8 +6,16 @@ import org.springframework.http.HttpStatus;
 
 public class TopicNotFound extends PictzException {
 
-    public TopicNotFound(String slug) {
-        super(String.format("Topic with slug '%s' not found", slug));
+    private TopicNotFound(String message) {
+        super(message);
+    }
+
+    public static TopicNotFound byId(Long id) {
+        return new TopicNotFound("topic not found with id : " + id);
+    }
+
+    public static TopicNotFound bySlug(String slug) {
+        return new TopicNotFound("Topic with slug not found : " + slug);
     }
 
     @Override
