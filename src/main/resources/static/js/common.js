@@ -21,3 +21,11 @@ function debounce(func, delay) {
         }, delay);
     };
 }
+
+// 날짜 형식을 'yyyy-MM-dd HH:mm'으로 변환하는 함수
+function formatDate(dateString) {
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit',
+                      hour: '2-digit', minute: '2-digit' };
+    const date = new Date(dateString);
+    return date.toLocaleDateString('ko-KR', options).replace(',', '');
+}
