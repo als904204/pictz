@@ -7,6 +7,7 @@ import online.pictz.api.admin.service.AdminTopicSuggestService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,6 +23,12 @@ public class AdminTopicSuggestController {
     public ResponseEntity<List<AdminTopicSuggestResponse>> getAllTopicSuggests() {
         List<AdminTopicSuggestResponse> responses = adminTopicSuggestService.getAllTopicSuggests();
         return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<AdminTopicSuggestResponse> getTopicById(@PathVariable("id") Long id) {
+        AdminTopicSuggestResponse response = adminTopicSuggestService.getTopicById(id);
+        return ResponseEntity.ok(response);
     }
 
 }
