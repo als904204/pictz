@@ -18,7 +18,7 @@ function loadTopics(){
         renderTopicList(data);
         // 토픽 ID 추출 후 선택지 데이터 요청
         const topicIds = data.map(topic => topic.id);
-        loadChoicesForTopics(topicIds);
+        //loadChoicesForTopics(topicIds);
      })
      .catch(error => console.error('Error fetching topics:', error));
 }

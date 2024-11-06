@@ -59,7 +59,32 @@
       <i class="bi bi-arrow-left me-2"></i>목록으로 돌아가기
     </a>
   </div>
+
+  <!-- Reject Modal -->
+  <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="rejectForm">
+          <div class="modal-header">
+            <h5 class="modal-title" id="rejectModalLabel">토픽 거절</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="rejectReason" class="form-label">거절 이유</label>
+              <textarea class="form-control" id="rejectReason" name="reason" rows="3" required></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+            <button type="submit" class="btn btn-danger">거절</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
+
 
 </body>
 </html>
