@@ -16,7 +16,7 @@ function sendForm() {
 
     submitBtn.disabled = true;
 
-    fetch('/api/v1/topic_suggests', {
+    fetch('/api/v1/topic-suggests', {
       method: 'POST',
       body: formData
     })

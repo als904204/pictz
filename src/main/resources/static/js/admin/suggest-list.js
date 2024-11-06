@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function loadSuggestList() {
-    fetch('/api/v1/admin/topic_suggests')
+    fetch('/api/v1/admin/topic-suggests')
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);

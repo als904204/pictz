@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const suggestId = getSuggestIdFromURL();
     if (suggestId) {
         loadSuggestDetail(suggestId);
+        approvedBtn(suggestId);
     } else {
         alert('유효한 토픽 문의 ID가 없습니다.');
     }
@@ -18,7 +19,7 @@ function getSuggestIdFromURL() {
 
 // 문의 정보를 로드하고 화면에 표시하는 함수
 function loadSuggestDetail(id) {
-    fetch(`/api/v1/admin/topic_suggests/${id}`)
+    fetch(`/api/v1/admin/topic-suggests/${id}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -56,6 +57,42 @@ function renderSuggestDetail(suggest) {
         detailImagesContainer.appendChild(img);
     });
 }
+
+function approvedBtn(suggestId) {
+   const approvedBtn = document.getElementById('approvedBtn');
+   approvedBtn.addEventListener('click', () => {
+          const isConfirmed = confirm('정말로 승인하시겠습니까?');
+          if (isConfirmed) {
+              fetch(`/api/v1/admin/topic-suggests/${suggestId}`, {
+                method: 'PATCH',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ status: 'APPROVED' })
+              })
+              .then(response => {
+                if(!response.ok) {
+                  throw new Error('승인 처리 중 오류가 발생했습니다.');
+                }
+                return response.json();
+              })
+              .then(data => {
+                  alert('성공적으로 승인되었습니다.');
+                  window.location.reload();
+              })
+              .catch(error => {
+                  console.error('Error:', error);
+                  alert('승인 처리 중 오류가 발생했습니다.');
+              });
+          }
+      });
+}
+
+function rejectedBtn() {
+}
+
+
+
 
 function updateStatusBadgeColor(element, status) {
     element.classList.remove('bg-primary', 'bg-success', 'bg-warning', 'bg-danger');
