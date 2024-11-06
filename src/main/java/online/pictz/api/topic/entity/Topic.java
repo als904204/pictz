@@ -40,26 +40,17 @@ public class Topic {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "published_at", nullable = false)
-    private LocalDateTime publishedAt;
-
-    private LocalDateTime endAt;
-
     protected Topic() {
     }
 
     @Builder
     public Topic(Long suggestedTopicId, String title, String slug, TopicStatus status,
-        String thumbnailImageUrl, LocalDateTime createdAt,
-        LocalDateTime publishedAt,
-        LocalDateTime endAt) {
+        String thumbnailImageUrl, LocalDateTime createdAt) {
         this.suggestedTopicId = suggestedTopicId;
         this.title = title;
         this.slug = slug;
         this.status = status;
         this.thumbnailImageUrl = thumbnailImageUrl;
-        this.publishedAt = publishedAt;
         this.createdAt = createdAt;
-        this.endAt = endAt;
     }
 }

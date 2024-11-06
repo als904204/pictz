@@ -35,8 +35,6 @@ public class TopicResponse {
             .status(topic.getStatus())
             .thumbnailImageUrl(topic.getThumbnailImageUrl())
             .createdAt(topic.getCreatedAt())
-            .publishedAt(topic.getPublishedAt())
-            .endAt(topic.getEndAt())
             .build();
     }
 }
