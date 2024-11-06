@@ -42,9 +42,7 @@ public class TopicServiceImpl implements TopicService{
             .slug(topicCreate.getSlug())
             .status(topicCreate.getStatus())
             .thumbnailImageUrl(topicCreate.getThumbnailImageUrl())
-            .publishedAt(topicCreate.getPublishedAt())
             .createdAt(timeProvider.getCurrentTime())
-            .endAt(topicCreate.getEndAt())
             .build();
 
         Topic savedTopic = topicRepository.save(newTopic);
