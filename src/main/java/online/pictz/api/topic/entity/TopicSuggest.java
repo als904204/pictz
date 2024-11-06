@@ -49,6 +49,9 @@ public class TopicSuggest {
     @JoinColumn(name = "user_id", nullable = false)
     private SiteUser user;
 
+    @Column(name = "rejection_reason")
+    private String rejectionReason;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TopicSuggestStatus status;
@@ -88,4 +91,12 @@ public class TopicSuggest {
         choiceImage.setTopicSuggest(null);
     }
 
+    public void updateStatus(TopicSuggestStatus status, LocalDateTime updatedAt) {
+        this.status = status;
+        this.updatedAt = updatedAt;
+    }
+
+    public void updateRejectReason(String rejectionReason) {
+        this.rejectionReason = rejectionReason;
+    }
 }
