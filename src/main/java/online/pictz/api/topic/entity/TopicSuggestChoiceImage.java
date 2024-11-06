@@ -26,13 +26,17 @@ public class TopicSuggestChoiceImage {
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
+    @Column(name = "fileName", nullable = false)
+    private String fileName;
+
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "topic_suggest_id", nullable = false)
     private TopicSuggest topicSuggest;
 
-    public TopicSuggestChoiceImage(String imageUrl) {
+    public TopicSuggestChoiceImage(String imageUrl, String fileName) {
         this.imageUrl = imageUrl;
+        this.fileName = fileName;
     }
 
 }

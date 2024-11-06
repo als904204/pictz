@@ -1,7 +1,7 @@
 package online.pictz.api.topic.service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import online.pictz.api.image.service.ImageStorageService;
@@ -56,7 +56,9 @@ public class TopicSuggestServiceImpl implements TopicSuggestService{
         // '토픽 문의 선택지 이미지' 이미지 저장 후 '토픽 문의' 엔티티에 추가
         for (MultipartFile choiceImageFile : suggestRequest.getChoiceImages()) {
             String choiceImageUrl = imageStorageService.storeImage(choiceImageFile);
-            TopicSuggestChoiceImage choiceImage = new TopicSuggestChoiceImage(choiceImageUrl);
+            String choiceImageName = cleanFilename(choiceImageFile.getOriginalFilename());
+            TopicSuggestChoiceImage choiceImage = new TopicSuggestChoiceImage(choiceImageUrl,
+                choiceImageName);
             suggest.addChoiceImage(choiceImage);
         }
 
@@ -89,5 +91,17 @@ public class TopicSuggestServiceImpl implements TopicSuggestService{
         return siteUserRepository.findById(siteUserId)
             .orElseThrow(() -> UserNotFound.of(siteUserId));
     }
+
+    /**
+     * 공백, 확장자 제거
+     * @param fileName 파일 이름
+     * @return hello world.jpg -> helloworld
+     */
+    private String cleanFilename(String fileName) {
+        return Objects.requireNonNull(fileName)
+            .replace(" ", "")
+            .replaceAll("\\.[^.]+$", "");
+    }
+
 
 }

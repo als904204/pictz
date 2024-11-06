@@ -18,6 +18,10 @@ public class TopicNotFound extends PictzException {
         return new TopicNotFound("Topic with slug not found : " + slug);
     }
 
+    public static TopicNotFound bySuggestedTopicId(Long id) {
+        return new TopicNotFound("Topic with suggestedTopicId not found : " + id);
+    }
+
     @Override
     public HttpStatus getHttpStatus() {
         return HttpStatus.NOT_FOUND;
