@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (suggestId) {
         loadSuggestDetail(suggestId);
         approvedBtn(suggestId);
+        rejectedBtn(suggestId);
     } else {
         alert('유효한 토픽 문의 ID가 없습니다.');
     }
@@ -88,7 +89,52 @@ function approvedBtn(suggestId) {
       });
 }
 
-function rejectedBtn() {
+function rejectedBtn(suggestId) {
+    const rejectBtn = document.getElementById('rejectedBtn');
+    if (!rejectBtn) {
+        console.error('Reject button not found.');
+        return;
+    }
+    rejectBtn.addEventListener('click', () => {
+        const rejectModal = new bootstrap.Modal(document.getElementById('rejectModal'));
+        rejectModal.show();
+    });
+
+    const rejectForm = document.getElementById('rejectForm');
+    if (!rejectForm) {
+        console.error('Reject form not found.');
+        return;
+    }
+    rejectForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const rejectReason = document.getElementById('rejectReason').value.trim();
+        if (!rejectReason) {
+            alert('거절 이유를 입력해주세요.');
+            return;
+        }
+
+        fetch(`/api/v1/admin/topic-suggests/${suggestId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ status: 'REJECTED', reason: rejectReason })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('거절 처리 중 오류가 발생했습니다.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert('성공적으로 거절되었습니다.');
+            window.location.reload();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('거절 처리 중 오류가 발생했습니다.');
+        });
+    });
 }
 
 
