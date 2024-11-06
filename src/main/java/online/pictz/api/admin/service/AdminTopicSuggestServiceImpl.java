@@ -52,19 +52,20 @@ public class AdminTopicSuggestServiceImpl implements AdminTopicSuggestService{
 
     @Transactional
     @Override
-    public AdminTopicSuggestUpdateResponse patchTopicSuggestStatus(Long id, TopicSuggestStatus status,
+    public AdminTopicSuggestUpdateResponse patchTopicSuggestStatus(Long suggestId, TopicSuggestStatus status,
         String rejectReason) {
-        TopicSuggest topicSuggest = topicSuggestRepository.findById(id)
-            .orElseThrow(() -> TopicNotFound.byId(id));
+
+        TopicSuggest topicSuggest = topicSuggestRepository.findById(suggestId)
+            .orElseThrow(() -> TopicNotFound.byId(suggestId));
 
         topicSuggest.updateStatus(status, timeProvider.getCurrentTime());
-        Topic topic;
 
         if (status.equals(TopicSuggestStatus.APPROVED)) {
+
             String slug = slugGenerator.generate();
 
-            topic = Topic.builder()
-                .suggestedTopicId(id)
+            Topic topic = Topic.builder()
+                .suggestedTopicId(suggestId)
                 .title(topicSuggest.getTitle())
                 .slug(slug)
                 .thumbnailImageUrl(topicSuggest.getThumbnailUrl())
@@ -72,11 +73,13 @@ public class AdminTopicSuggestServiceImpl implements AdminTopicSuggestService{
                 .createdAt(timeProvider.getCurrentTime())
                 .build();
 
-            Long topicId = topicRepository.save(topic).getId();
-
             List<TopicSuggestChoiceImage> choiceImages = topicSuggest.getChoiceImages();
 
+            Long topicId = topicRepository.save(topic).getId();
+
             List<Choice> choices = new ArrayList<>();
+
+            // 새로운 토픽의 선택지 목록 엔티티 생성
             for (TopicSuggestChoiceImage choiceImage : choiceImages) {
                 choices.add(new Choice(topicId, choiceImage.getFileName(), choiceImage.getImageUrl()));
             }
