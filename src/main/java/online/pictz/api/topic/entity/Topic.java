@@ -43,6 +43,10 @@ public class Topic {
     protected Topic() {
     }
 
+    public void changeStatus(TopicStatus newStatus) {
+        this.status = newStatus;
+    }
+
     @Builder
     public Topic(Long suggestedTopicId, String title, String slug, TopicStatus status,
         String thumbnailImageUrl, LocalDateTime createdAt) {

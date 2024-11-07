@@ -91,12 +91,15 @@ public class TopicSuggest {
         choiceImage.setTopicSuggest(null);
     }
 
-    public void updateStatus(TopicSuggestStatus status, LocalDateTime updatedAt) {
+
+    public void approve(TopicSuggestStatus status, LocalDateTime currentTime) {
         this.status = status;
-        this.updatedAt = updatedAt;
+        this.updatedAt = currentTime;
     }
 
-    public void updateRejectReason(String rejectionReason) {
+    public void reject(TopicSuggestStatus status, String rejectionReason, LocalDateTime currentTime) {
+        this.status = status;
         this.rejectionReason = rejectionReason;
+        this.updatedAt = currentTime;
     }
 }
