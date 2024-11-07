@@ -25,7 +25,7 @@ public class TopicServiceImpl implements TopicService{
      */
     @Override
     public List<TopicResponse> findAll() {
-        return topicRepository.findAll()
+        return topicRepository.findActiveTopics()
             .stream()
             .map(TopicResponse::from)
             .collect(Collectors.toList());
