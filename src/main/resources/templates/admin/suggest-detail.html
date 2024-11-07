@@ -3,12 +3,12 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{fragments/layout}">
 <head>
-  <title>Profile</title>
+  <title>Suggest</title>
   <link rel="stylesheet" th:href="@{/css/admin/suggest-detail.css}">
   <script defer th:src="@{/js/admin/suggest-detail.js}"></script>
 </head>
 
-<<body>
+<body>
 <div layout:fragment="content">
   <div class="container py-5">
     <div class="detail-card">
@@ -30,6 +30,12 @@
         </div>
       </div>
 
+      <section class="mb-4" id="rejectReasonSection" style="display: none;">
+        <h4 class="section-title text-danger">거부 이유</h4>
+        <p id="detailRejectReason" class="text-body"></p>
+      </section>
+
+
       <section class="mb-4">
         <h4 class="section-title">설명</h4>
         <p class="lead" id="detailDescription">토픽 설명</p>
@@ -49,9 +55,11 @@
         </div>
       </section>
 
+
+
       <div class="text-center">
         <button type="button" class="btn btn-success" id="approvedBtn">승인</button>
-        <button type="button" class="btn btn-danger" id="rejectedBtn">거절</button>
+        <button type="button" class="btn btn-danger" id="rejectedBtn">거부</button>
       </div>
     </div>
 
@@ -66,18 +74,18 @@
       <div class="modal-content">
         <form id="rejectForm">
           <div class="modal-header">
-            <h5 class="modal-title" id="rejectModalLabel">토픽 거절</h5>
+            <h5 class="modal-title" id="rejectModalLabel">토픽 승인 거부</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <div class="mb-3">
-              <label for="rejectReason" class="form-label">거절 이유</label>
+              <label for="rejectReason" class="form-label">거부 이유</label>
               <textarea class="form-control" id="rejectReason" name="reason" rows="3" required></textarea>
             </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-            <button type="submit" class="btn btn-danger">거절</button>
+            <button type="submit" class="btn btn-danger">거부</button>
           </div>
         </form>
       </div>
