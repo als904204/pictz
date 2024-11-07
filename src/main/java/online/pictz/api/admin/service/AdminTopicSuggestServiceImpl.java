@@ -15,6 +15,7 @@ import online.pictz.api.topic.entity.TopicSuggest;
 import online.pictz.api.topic.entity.TopicSuggestChoiceImage;
 import online.pictz.api.topic.entity.TopicSuggestStatus;
 import online.pictz.api.topic.exception.TopicNotFound;
+import online.pictz.api.topic.exception.TopicSuggestStatusNotFound;
 import online.pictz.api.topic.repository.TopicRepository;
 import online.pictz.api.topic.repository.TopicSuggestRepository;
 import online.pictz.api.topic.service.SlugGenerator;
@@ -50,49 +51,55 @@ public class AdminTopicSuggestServiceImpl implements AdminTopicSuggestService{
             .orElseThrow(() -> TopicNotFound.byId(id));
     }
 
-    @Transactional
     @Override
+    @Transactional
     public AdminTopicSuggestUpdateResponse patchTopicSuggestStatus(Long suggestId, TopicSuggestStatus status,
         String rejectReason) {
 
         TopicSuggest topicSuggest = topicSuggestRepository.findById(suggestId)
-            .orElseThrow(() -> TopicNotFound.byId(suggestId));
+            .orElseThrow(() -> TopicNotFound.bySuggestedTopicId(suggestId));
 
-        topicSuggest.updateStatus(status, timeProvider.getCurrentTime());
-
-        if (status.equals(TopicSuggestStatus.APPROVED)) {
-
-            String slug = slugGenerator.generate();
-
-            Topic topic = Topic.builder()
-                .suggestedTopicId(suggestId)
-                .title(topicSuggest.getTitle())
-                .slug(slug)
-                .thumbnailImageUrl(topicSuggest.getThumbnailUrl())
-                .status(TopicStatus.ACTIVE)
-                .createdAt(timeProvider.getCurrentTime())
-                .build();
-
-            List<TopicSuggestChoiceImage> choiceImages = topicSuggest.getChoiceImages();
-
-            Long topicId = topicRepository.save(topic).getId();
-
-            List<Choice> choices = new ArrayList<>();
-
-            // 새로운 토픽의 선택지 목록 엔티티 생성
-            for (TopicSuggestChoiceImage choiceImage : choiceImages) {
-                choices.add(new Choice(topicId, choiceImage.getFileName(), choiceImage.getImageUrl()));
-            }
-
-            choiceRepository.saveAll(choices);
-            return new AdminTopicSuggestUpdateResponse(status, "topic is approved", null);
-
-        } else {
-            topicSuggest.updateRejectReason(rejectReason);
-            return new AdminTopicSuggestUpdateResponse(status, "topic is rejected", rejectReason);
+        switch (status) {
+            case APPROVED:
+                topicSuggest.approve(status, timeProvider.getCurrentTime());
+                topicRepository.findBySuggestedTopicId(suggestId).ifPresentOrElse(
+                    topic -> topic.changeStatus(TopicStatus.ACTIVE), // 있는 토픽이라면 상태만 '활성화'
+                    () -> saveNewTopic(suggestId, topicSuggest)      // 없는 토픽이라면 DB 저장
+                );
+                return new AdminTopicSuggestUpdateResponse(status, "topic is approved", null);
+            case REJECTED:
+                Topic rejectTopic = topicRepository.findBySuggestedTopicId(suggestId)
+                    .orElseThrow(() -> TopicNotFound.bySuggestedTopicId(suggestId));
+                rejectTopic.changeStatus(TopicStatus.INACTIVE);
+                topicSuggest.reject(status, rejectReason, timeProvider.getCurrentTime());
+                return new AdminTopicSuggestUpdateResponse(status, "topic is rejected", rejectReason);
+            default:
+                throw TopicSuggestStatusNotFound.byStatus(status);
         }
-
-
     }
+
+    private void saveNewTopic(Long suggestId, TopicSuggest topicSuggest) {
+
+        String slug = slugGenerator.generate();
+
+        Topic newTopic = Topic.builder()
+            .suggestedTopicId(suggestId)
+            .title(topicSuggest.getTitle())
+            .slug(slug)
+            .thumbnailImageUrl(topicSuggest.getThumbnailUrl())
+            .status(TopicStatus.ACTIVE)
+            .createdAt(timeProvider.getCurrentTime())
+            .build();
+
+        Long topicId = topicRepository.save(newTopic).getId();
+
+        List<TopicSuggestChoiceImage> choiceImages = topicSuggest.getChoiceImages();
+        List<Choice> choices = new ArrayList<>();
+        for (TopicSuggestChoiceImage choiceImage : choiceImages) {
+            choices.add(new Choice(topicId, choiceImage.getFileName(), choiceImage.getImageUrl()));
+        }
+        choiceRepository.saveAll(choices);
+    }
+
 }
 
