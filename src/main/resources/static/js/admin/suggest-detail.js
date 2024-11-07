@@ -57,6 +57,23 @@ function renderSuggestDetail(suggest) {
         img.className = 'choice-image';
         detailImagesContainer.appendChild(img);
     });
+
+    // 상태에 따라 버튼 비활성화
+    const approveBtn = document.getElementById('approvedBtn');
+    const rejectBtn = document.getElementById('rejectedBtn');
+    if (suggest.status === 'APPROVED') {
+        approveBtn.disabled = true;
+    }
+    if (suggest.status === 'REJECTED') {
+        rejectBtn.disabled = true;
+    }
+
+  if (suggest.rejectReason) {
+      const rejectReasonSection = document.getElementById('rejectReasonSection');
+      const rejectReasonText = document.getElementById('detailRejectReason');
+      rejectReasonText.textContent = suggest.rejectReason;  // reason -> rejectReason으로 변경
+      rejectReasonSection.style.display = 'block';
+  }
 }
 
 function approvedBtn(suggestId) {
@@ -109,7 +126,7 @@ function rejectedBtn(suggestId) {
         event.preventDefault();
         const rejectReason = document.getElementById('rejectReason').value.trim();
         if (!rejectReason) {
-            alert('거절 이유를 입력해주세요.');
+            alert('거부 이유를 입력해주세요.');
             return;
         }
 
@@ -122,22 +139,20 @@ function rejectedBtn(suggestId) {
         })
         .then(response => {
             if (!response.ok) {
-                throw new Error('거절 처리 중 오류가 발생했습니다.');
+                throw new Error('거부 처리 중 오류가 발생했습니다.');
             }
             return response.json();
         })
         .then(data => {
-            alert('성공적으로 거절되었습니다.');
+            alert('성공적으로 거부되었습니다.');
             window.location.reload();
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('거절 처리 중 오류가 발생했습니다.');
+            alert('거부 처리 중 오류가 발생했습니다.');
         });
     });
 }
-
-
 
 
 function updateStatusBadgeColor(element, status) {
@@ -158,13 +173,3 @@ function updateStatusBadgeColor(element, status) {
     }
 }
 
-function formatDate(dateString) {
-    const options = {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit'
-    };
-    return new Date(dateString).toLocaleDateString('ko-KR', options);
-}

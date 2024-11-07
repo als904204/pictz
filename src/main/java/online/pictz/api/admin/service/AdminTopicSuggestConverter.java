@@ -17,6 +17,7 @@ public class AdminTopicSuggestConverter {
             .thumbnailUrl(suggest.getThumbnailUrl())
             .nickname(suggest.getUser().getNickname())
             .status(suggest.getStatus().name())
+            .rejectReason(suggest.getRejectionReason())
             .createdAt(suggest.getCreatedAt())
             .choiceImageUrls(
                 suggest.getChoiceImages().stream()
