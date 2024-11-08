@@ -1,6 +1,7 @@
 package online.pictz.api.topic.dto;
 
 import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import online.pictz.api.topic.entity.Topic;
@@ -8,6 +9,7 @@ import online.pictz.api.topic.entity.TopicStatus;
 
 @Getter
 @Builder
+@AllArgsConstructor
 public class TopicResponse {
 
     private Long id;
@@ -16,11 +18,7 @@ public class TopicResponse {
     private String slug;
     private TopicStatus status;
     private String thumbnailImageUrl;
-    private int sharedCount;
-    private int viewCount;
     private LocalDateTime createdAt;
-    private LocalDateTime publishedAt;
-    private LocalDateTime endAt;
 
     /**
      * @param topic 변환할 Topic 엔티티
