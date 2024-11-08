@@ -1,26 +1,28 @@
 document.addEventListener('DOMContentLoaded', () => {
     loadTopics();
+    setupSortButtons();
+    setupPagination();
 });
 
+let currentSortBy = 'LATEST';
+let currentPage = 0;
 
 /**
  * Topics 목록 api 요청
  */
 function loadTopics(){
-  fetch('/api/v1/topics')
-    .then(response => {
-      if(!response.ok) {
-        throw new Error(`Error fetching topic list data! status: ${response.status}`);
-      }
-        return response.json();
-    })
-     .then(data => {
-        renderTopicList(data);
-        // 토픽 ID 추출 후 선택지 데이터 요청
-        const topicIds = data.map(topic => topic.id);
-        //loadChoicesForTopics(topicIds);
-     })
-     .catch(error => console.error('Error fetching topics:', error));
+    fetch(`/api/v1/topics?sortBy=${currentSortBy}&page=${currentPage}`)
+        .then(response => {
+            if(!response.ok) {
+                throw new Error(`Error fetching topic list data! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            renderTopicList(data.content);
+            updatePagination(data.currentPage, data.totalPages);
+        })
+        .catch(error => console.error('Error fetching topics:', error));
 }
 
 /** 
@@ -73,49 +75,105 @@ function renderTopicList(topics) {
   });
 }
 
-/** 
-* Topic에 해당하는 투표 정보 결과 요청
 
-function loadChoicesForTopics(topicIds) {
-  if (topicIds.length === 0) return;
+function setupSortButtons() {
+  const sortButtons = document.querySelectorAll('.sort-session .btn');
+  sortButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      // 현재 활성화된 버튼 비활성화
+      sortButtons.forEach(btn => btn.classList.remove('active', 'btn-primary'));
+      sortButtons.forEach(btn => btn.classList.add('btn-light', 'border-primary', 'text-primary'));
 
-  // 토픽 ID를 쿼리 파라미터로 변환
-  const params = topicIds.map(id => `topicIds=${encodeURIComponent(id)}`).join('&');
-  const url = `/api/v1/choices/by-topics?${params}`;
+       // 클릭한 버튼 활성화
+      button.classList.add('active', 'btn-primary');
+      button.classList.remove('btn-light', 'border-primary', 'text-primary');
 
-  // 선택지 데이터 요청
-  fetch(url)
-      .then(response => {
-          if (!response.ok) {
-              throw new Error(`Failed to fetch choices: ${response.status}`);
-          }
-          return response.json();
-      })
-      .then(choices => {
-          renderChoices(choices);
-      })
-      .catch(error => {
-          console.error('Error fetching choices:', error);
-      });
+      // 정렬 기준 설정
+      currentSortBy = button.textContent === '인기순' ? 'POPULAR' : 'LATEST';
+
+      // 페이지 초기화
+      currentPage = 0;
+
+      // 데이터 다시 로드
+      loadTopics();
+
+    })
+  })
 }
-*/
 
-/** 
-* Topic에 해당하는 투표 정보 결과 랜더링
+/**
+ * 페이지 네비게이션 이벤트 리스너 설정
+ */
+function setupPagination() {
+    const pagination = document.querySelector('.pagination');
+    pagination.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', (event) => {
+            event.preventDefault();
+            const text = event.target.textContent;
 
-function renderChoices(choices) {
-  choices.forEach(choice => {
-      // 선택지에 해당하는 토픽 카드 찾기
-      const topicCard = document.querySelector(`[data-topic-id="${choice.topicId}"]`);
-      if (topicCard) {
-          const choicesContainer = topicCard.querySelector('.choices-container');
-          if (choicesContainer) {
-              const choiceElement = document.createElement('div');
-              choiceElement.className = 'd-flex justify-content-between align-items-center mb-2';
-              choiceElement.textContent = `${choice.name}: ${choice.voteCount}표`;
-              choicesContainer.appendChild(choiceElement);
-          }
-      }
-  });
+            if (text === 'Previous') {
+                if (currentPage > 0) {
+                    currentPage -= 1;
+                    loadTopics();
+                }
+            } else if (text === 'Next') {
+                if (currentPage < totalPages - 1) { // 'Next' 버튼 클릭 시 페이지 범위 체크
+                    currentPage += 1;
+                    loadTopics();
+                }
+            } else {
+                const selectedPage = parseInt(text) - 1;
+                if (!isNaN(selectedPage)) {
+                    currentPage = selectedPage;
+                    loadTopics();
+                }
+            }
+        });
+    });
 }
-*/
+
+/**
+ * 페이징 정보 기반으로 페이지 네비게이션 UI 업데이트
+ */
+function updatePagination(currentPage, totalPages) {
+    const pagination = document.querySelector('.pagination');
+    pagination.innerHTML = ''; // 기존 페이지 버튼 초기화
+
+    // 'Previous' 버튼 생성
+    const prevClass = currentPage === 0 ? 'page-item disabled' : 'page-item';
+    const prevItem = document.createElement('li');
+    prevItem.className = prevClass;
+    const prevLink = document.createElement('a');
+    prevLink.className = 'page-link';
+    prevLink.href = '#';
+    prevLink.textContent = 'Previous';
+    prevItem.appendChild(prevLink);
+    pagination.appendChild(prevItem);
+
+    // 페이지 번호 버튼 생성
+    for (let i = 1; i <= totalPages; i++) {
+        const pageClass = (i - 1 === currentPage) ? 'page-item active' : 'page-item';
+        const pageItem = document.createElement('li');
+        pageItem.className = pageClass;
+        const pageLink = document.createElement('a');
+        pageLink.className = 'page-link';
+        pageLink.href = '#';
+        pageLink.textContent = i;
+        pageItem.appendChild(pageLink);
+        pagination.appendChild(pageItem);
+    }
+
+    // 'Next' 버튼 생성
+    const nextClass = currentPage >= totalPages - 1 ? 'page-item disabled' : 'page-item';
+    const nextItem = document.createElement('li');
+    nextItem.className = nextClass;
+    const nextLink = document.createElement('a');
+    nextLink.className = 'page-link';
+    nextLink.href = '#';
+    nextLink.textContent = 'Next';
+    nextItem.appendChild(nextLink);
+    pagination.appendChild(nextItem);
+
+    // 이벤트 리스너 재설정
+    setupPagination(); // 페이징 UI 업데이트 후 이벤트 리스너 재설정
+}
