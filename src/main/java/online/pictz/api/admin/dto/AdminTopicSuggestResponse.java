@@ -17,19 +17,4 @@ public class AdminTopicSuggestResponse {
     private String rejectReason;
     private LocalDateTime createdAt;
     private List<String> choiceImageUrls;
-
-    public AdminTopicSuggestResponse(Long id, String title, String nickname, String thumbnailUrl,
-        String description, String status, String rejectReason, LocalDateTime createdAt,
-        List<String> choiceImageUrls) {
-        this.id = id;
-        this.title = title;
-        this.thumbnailUrl = thumbnailUrl;
-        this.choiceImageUrls = choiceImageUrls;
-        this.nickname = nickname;
-        this.description = description;
-        this.status = status;
-        this.rejectReason = rejectReason;
-        this.createdAt = createdAt;
-    }
-
 }
