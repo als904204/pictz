@@ -61,17 +61,17 @@ public class AdminTopicSuggestServiceImpl implements AdminTopicSuggestService{
 
         switch (status) {
             case APPROVED:
-                topicSuggest.approve(status, timeProvider.getCurrentTime());
+                topicSuggest.approve(timeProvider.getCurrentTime());
                 topicRepository.findBySuggestedTopicId(suggestId).ifPresentOrElse(
                     approveTopic-> approveTopic.changeStatus(TopicStatus.ACTIVE, timeProvider.getCurrentTime()), // 있는 토픽이라면 상태만 '활성화'
                     () -> saveNewTopic(suggestId, topicSuggest)      // 없는 토픽이라면 DB 저장
                 );
                 return new AdminTopicSuggestUpdateResponse(status, "topic is approved", null);
             case REJECTED:
-                Topic rejectTopic = topicRepository.findBySuggestedTopicId(suggestId)
-                    .orElseThrow(() -> TopicNotFound.bySuggestedTopicId(suggestId));
-                rejectTopic.changeStatus(TopicStatus.INACTIVE, timeProvider.getCurrentTime());
-                topicSuggest.reject(status, rejectReason, timeProvider.getCurrentTime());
+                topicSuggest.reject(rejectReason, timeProvider.getCurrentTime());
+                topicRepository.findBySuggestedTopicId(suggestId).ifPresent(
+                    rejectTopic -> rejectTopic.changeStatus(TopicStatus.INACTIVE, timeProvider.getCurrentTime())
+                );
                 return new AdminTopicSuggestUpdateResponse(status, "topic is rejected", rejectReason);
             default:
                 throw TopicSuggestStatusNotFound.byStatus(status);
