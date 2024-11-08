@@ -92,13 +92,14 @@ public class TopicSuggest {
     }
 
 
-    public void approve(TopicSuggestStatus status, LocalDateTime currentTime) {
-        this.status = status;
-        this.updatedAt = currentTime;
+    public void approve(LocalDateTime updatedAt) {
+        this.status = TopicSuggestStatus.APPROVED;
+        this.updatedAt = updatedAt;
+        this.rejectionReason = null;
     }
 
-    public void reject(TopicSuggestStatus status, String rejectionReason, LocalDateTime currentTime) {
-        this.status = status;
+    public void reject(String rejectionReason, LocalDateTime currentTime) {
+        this.status = TopicSuggestStatus.REJECTED;
         this.rejectionReason = rejectionReason;
         this.updatedAt = currentTime;
     }
