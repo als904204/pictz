@@ -26,6 +26,9 @@ public class StorageException extends PictzException {
         return new StorageException("Failed to store image locally");
     }
 
+    public static StorageException failedToDelete(String filename, String cause) {
+        return new StorageException("Failed to delete file: " + filename + ", cause : " + cause);
+    }
 
     @Override
     public HttpStatus getHttpStatus() {

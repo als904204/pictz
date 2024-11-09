@@ -1,5 +1,6 @@
 package online.pictz.api.image.service;
 
+import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface ImageStorageService {
@@ -12,5 +13,9 @@ public interface ImageStorageService {
      * @throws RuntimeException 이미지 저장 중 발생한 예외
      */
     String storeImage(MultipartFile file);
+
+    void deleteImage(String imageUrl);
+
+    void deleteImages(List<String> imageUrls);
 
 }

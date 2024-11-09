@@ -1,10 +1,15 @@
 package online.pictz.api.image.service;
 
+import static online.pictz.api.image.service.ImageStorageUtils.extractFilename;
+import static online.pictz.api.image.service.ImageStorageUtils.getFileExtension;
+import static online.pictz.api.image.service.ImageStorageUtils.isImageFile;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import online.pictz.api.image.exception.StorageException;
@@ -20,12 +25,15 @@ public class LocalImageStorageService implements ImageStorageService{
 
     private final Path storageSuffix;
     private final String baseUrl;
+    private final String imagesPath;
 
     public LocalImageStorageService(
         @Value("${storage.local.path}") String storagePath,
-        @Value("${storage.local.base-url}") String baseUrl) {
+        @Value("${storage.local.base-url}") String baseUrl,
+        @Value("${storage.local.images-path}") String imagesPath) {
         this.storageSuffix = Paths.get(storagePath).toAbsolutePath().normalize();
         this.baseUrl = baseUrl;
+        this.imagesPath = imagesPath;
         try {
             Files.createDirectories(this.storageSuffix);
         } catch (IOException e) {
@@ -35,9 +43,7 @@ public class LocalImageStorageService implements ImageStorageService{
 
     @Override
     public String storeImage(MultipartFile file){
-
         String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-
         try{
             if (fileName.contains("..")) {
                 throw StorageException.invalidFilePath(fileName);
@@ -46,38 +52,33 @@ public class LocalImageStorageService implements ImageStorageService{
             if (!isImageFile(fileName)) {
                 throw StorageException.notImageFile();
             }
-
             String fileExtension = getFileExtension(fileName);
             String uuidFileName = UUID.randomUUID() + "." + fileExtension;
 
             Path targetLocation = storageSuffix.resolve(uuidFileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-            return baseUrl + "/images/" + uuidFileName;
+            return baseUrl + imagesPath + uuidFileName;
         } catch (IOException e) {
             throw StorageException.failedToStore();
         }
 
     }
 
-    /**
-     * 이미지 파일인지 검증
-     *
-     * @param filename 파일 이름
-     * @return 이미지 파일 여부
-     */
-    private boolean isImageFile(String filename) {
-        String extension = getFileExtension(filename).toLowerCase();
-        return extension.equals("jpg") || extension.equals("jpeg") ||
-            extension.equals("png") || extension.equals("bmp");
+    @Override
+    public void deleteImage(String imageUrl) {
+        String fileName = extractFilename(imageUrl, baseUrl, imagesPath);
+        Path filePath = storageSuffix.resolve(fileName).normalize();
+        try {
+            Files.deleteIfExists(filePath);
+        } catch (IOException e) {
+            throw StorageException.failedToDelete(fileName, e.getMessage());
+        }
     }
 
-    /**
-     * 파일의 확장자 반환
-     *
-     * @param filename 파일 이름
-     * @return 파일 확장자
-     */
-    private String getFileExtension(String filename) {
-        return StringUtils.getFilenameExtension(filename);
+    @Override
+    public void deleteImages(List<String> imageUrls) {
+        if (imageUrls == null || imageUrls.isEmpty()) return;
+        imageUrls.forEach(this::deleteImage);
     }
+
 }
