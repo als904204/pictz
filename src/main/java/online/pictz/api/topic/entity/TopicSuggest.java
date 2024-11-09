@@ -19,6 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
+import online.pictz.api.topic.exception.TopicSuggestForbidden;
 import online.pictz.api.user.entity.SiteUser;
 
 @Entity
@@ -80,15 +81,34 @@ public class TopicSuggest {
         this.thumbnailUrl = thumbnailUrl;
     }
 
-    // 연관관계 편의 메서드
+    /**
+     * 선택지 이미지 연관관계 추가
+     */
     public void addChoiceImage(TopicSuggestChoiceImage choiceImage) {
         choiceImages.add(choiceImage);
         choiceImage.setTopicSuggest(this);
     }
 
+    /**
+     * 선택지 이미지 연관관계 제거
+     */
     public void removeChoiceImage(TopicSuggestChoiceImage choiceImage) {
         choiceImages.remove(choiceImage);
         choiceImage.setTopicSuggest(null);
+    }
+
+    /**
+     * 선택지 이미지 리스트 연관관계 추가
+     */
+    public void updateChoiceImages(List<TopicSuggestChoiceImage> choiceImages) {
+        // 기존 선택지 이미지 연관관계 삭제
+        for (TopicSuggestChoiceImage existingImage : new ArrayList<>(this.choiceImages)) {
+            removeChoiceImage(existingImage);
+        }
+        // 새로운 선택지 이미지와 연관관계 설정
+        for (TopicSuggestChoiceImage newImage : choiceImages) {
+            addChoiceImage(newImage);
+        }
     }
 
 
@@ -102,5 +122,21 @@ public class TopicSuggest {
         this.status = TopicSuggestStatus.REJECTED;
         this.rejectionReason = rejectionReason;
         this.updatedAt = currentTime;
+    }
+
+    public void validateSuggestOwner(Long ownerId, Long currentUserId) {
+        if (!ownerId.equals(currentUserId)) {
+            throw TopicSuggestForbidden.of(currentUserId, ownerId);
+        }
+    }
+
+    public void updateThumbnailUrl(String newThumbnailUrl) {
+        this.thumbnailUrl = newThumbnailUrl;
+    }
+
+    public void updateDetails(String title, LocalDateTime updatedAt, String description) {
+        this.title = title;
+        this.updatedAt = updatedAt;
+        this.description = description;
     }
 }
