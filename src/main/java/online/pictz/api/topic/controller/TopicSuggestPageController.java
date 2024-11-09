@@ -10,4 +10,10 @@ public class TopicSuggestPageController {
     public String topicSuggestPage() {
         return "suggest";
     }
+
+    @GetMapping("/topic-suggests/{id}")
+    public String getTopicSuggestDetail() {
+        return "suggest-detail";
+    }
+
 }
