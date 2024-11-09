@@ -46,9 +46,17 @@ public class TopicSuggestApiController {
         @CurrentUser UserDto userDto) {
         TopicSuggestResponse response = topicSuggestService.getUserTopicSuggestDetail(id, userDto.getId());
         return ResponseEntity.ok(response);
-
     }
 
+    @PatchMapping("/{topicSuggestId}")
+    public ResponseEntity<TopicSuggestResponse> updateUserTopicSuggest(
+        @PathVariable("topicSuggestId") Long topicSuggestId,
+        @CurrentUser UserDto userDto,
+        @ModelAttribute TopicSuggestRequest updateDto) {
+        TopicSuggestResponse response = topicSuggestService.updateTopicSuggest(topicSuggestId,
+            userDto.getId(), updateDto);
+        return ResponseEntity.ok(response);
+    }
 
 
 }
