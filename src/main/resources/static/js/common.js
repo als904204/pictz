@@ -29,3 +29,18 @@ function formatDate(dateString) {
     const date = new Date(dateString);
     return date.toLocaleDateString('ko-KR', options).replace(',', '');
 }
+
+// 뒤로가기
+function goBack() {
+  window.history.back();
+}
+
+// 상태에 따라 색 변경
+function getStatusColor(status) {
+    switch (status) {
+        case '거부됨': return 'bg-danger';
+        case '보류중': return 'bg-secondary';
+        case '승인됨': return 'bg-success';
+        default: return 'bg-secondary';
+    }
+}

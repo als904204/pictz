@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     loadProfile();
-    loadInquiries();
+    loadSuggests();
 });
 
 function loadProfile() {
@@ -27,10 +27,10 @@ function loadProfile() {
         });
 }
 
-function loadInquiries() {
+function loadSuggests() {
     const loadingElement = document.getElementById('loading');
     const errorElement = document.getElementById('error-message');
-    const inquiryListElement = document.getElementById('inquiryList');
+    const mySuggestListElement = document.getElementById('my-suggest-list');
     const emptyMessage = document.getElementById('emptyMessage');
 
     loadingElement.style.display = 'block';
@@ -42,43 +42,39 @@ function loadInquiries() {
             }
             return response.json();
         })
-        .then(inquiries => {
+        .then(suggests => {
             loadingElement.style.display = 'none';
 
-            if (inquiries.length === 0) {
+            if (suggests.length === 0) {
                 emptyMessage.style.display = 'block';
                 return;
             }
 
-            inquiries.forEach(inquiry => {
-                const item = document.createElement('div');
-                item.className = 'list-group-item';
+            suggests.forEach(suggest => {
+                const item = document.createElement('a');
+                item.href = `/topic-suggests/${suggest.id}`;
+                item.className = 'list-group-item list-group-item-action';
+
+                const statusColorClass = getStatusColor(suggest.status);
+
+
                 item.innerHTML = `
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="mb-1">${inquiry.title}</h6>
+                            <h6 class="mb-1">${suggest.title}</h6>
                             <small class="text-muted">
-                                <i class="bi bi-clock me-1"></i>${new Date(inquiry.createdAt).toLocaleDateString()}
+                                <i class="bi bi-clock me-1"></i>${new Date(suggest.createdAt).toLocaleDateString()}
                             </small>
                         </div>
-                        <span class="badge bg-${getStatusColor(inquiry.status)}">${inquiry.status}</span>
+                         <span class="badge ${statusColorClass}">${suggest.status}</span>
                     </div>
                 `;
-                inquiryListElement.appendChild(item);
+                mySuggestListElement.appendChild(item);
             });
         })
         .catch(error => {
-            console.error('Error loading inquiries:', error);
+            console.error('Error loading suggests:', error);
             errorElement.style.display = 'block';
             loadingElement.style.display = 'none';
         });
-}
-
-function getStatusColor(status) {
-    switch (status) {
-        case 'PENDING': return 'warning';
-        case 'IN_PROGRESS': return 'info';
-        case 'COMPLETED': return 'success';
-        default: return 'secondary';
-    }
 }
