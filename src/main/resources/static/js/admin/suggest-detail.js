@@ -71,7 +71,7 @@ function renderSuggestDetail(suggest) {
   if (suggest.rejectReason) {
       const rejectReasonSection = document.getElementById('rejectReasonSection');
       const rejectReasonText = document.getElementById('detailRejectReason');
-      rejectReasonText.textContent = suggest.rejectReason;  // reason -> rejectReason으로 변경
+      rejectReasonText.textContent = suggest.rejectReason;
       rejectReasonSection.style.display = 'block';
   }
 }
