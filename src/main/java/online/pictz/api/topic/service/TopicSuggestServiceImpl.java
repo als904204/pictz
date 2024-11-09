@@ -97,6 +97,64 @@ public class TopicSuggestServiceImpl implements TopicSuggestService{
         return converter.toResponse(suggest);
     }
 
+    /**
+     *
+     * @param topicSuggestId 수정할 토픽 문의
+     * @param userId         요청한 사용자 id
+     * @param updateDto      수정 내용
+     * @return
+     */
+    @Transactional
+    @Override
+    public TopicSuggestResponse updateTopicSuggest(Long topicSuggestId, Long userId,
+        TopicSuggestRequest updateDto) {
+
+        // 1. 요청한 작성자가 수정하려는 문의 작성자인지 검증한다.
+        SiteUser user = getSiteUserById(userId);
+        TopicSuggest suggest = getSuggestById(topicSuggestId);
+
+        suggest.validateSuggestOwner(suggest.getUser().getId(), user.getId());
+
+        // 2. 제목과 설명을 업데이트 한다.
+        suggest.updateDetails(updateDto.getTitle(), timeProvider.getCurrentTime(),
+            updateDto.getDescription());
+
+        // 3. 썸네일을 업데이트 한다.
+        if (updateDto.getThumbnail() != null && !updateDto.getThumbnail().isEmpty()) {
+            // 기존 썸네일 삭제
+            imageStorageService.deleteImage(suggest.getThumbnailUrl());
+            String newThumbnailUrl = imageStorageService.storeImage(updateDto.getThumbnail());
+            suggest.updateThumbnailUrl(newThumbnailUrl);
+        }
+
+        // 4. 선택지 이미지를 업데이트 한다
+        List<MultipartFile> choiceImageFiles = updateDto.getChoiceImages();
+        if (choiceImageFiles != null && !choiceImageFiles.isEmpty()) {
+            List<TopicSuggestChoiceImage> choiceImages = suggest.getChoiceImages();
+
+            // 기존 선택지 이미지 삭제
+            List<String> existsChoiceImagesUrl = choiceImages.stream()
+                .map(TopicSuggestChoiceImage::getImageUrl)
+                .collect(Collectors.toList());
+            imageStorageService.deleteImages(existsChoiceImagesUrl);
+
+            List<TopicSuggestChoiceImage> newChoiceImages = choiceImageFiles.stream()
+                .map(file -> {
+                    String imageUrl = imageStorageService.storeImage(file);
+                    String imageName = ImageStorageUtils.cleanFilename(file.getOriginalFilename());
+                    return new TopicSuggestChoiceImage(imageUrl, imageName);
+                })
+                .collect(Collectors.toList());
+
+            suggest.updateChoiceImages(newChoiceImages);
+        }
+
+        // 5. 업데이트된 suggest 저장
+        topicSuggestRepository.save(suggest);
+
+        return converter.toResponse(suggest);
+    }
+
     private TopicSuggest getSuggestById(Long suggestId) {
         return topicSuggestRepository.findById(suggestId)
             .orElseThrow(() -> TopicSuggestNotFound.byId(suggestId));

@@ -12,4 +12,7 @@ public interface TopicSuggestService {
 
     TopicSuggestResponse getUserTopicSuggestDetail(Long suggestId, Long userId);
 
+    TopicSuggestResponse updateTopicSuggest(Long topicSuggestId, Long userId,
+        TopicSuggestRequest suggestRequest);
+
 }
