@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @AllArgsConstructor
-public class TopicSuggestCreate {
+public class TopicSuggestRequest {
     private String title;
     private String description;
     private MultipartFile thumbnail;
