@@ -1,6 +1,5 @@
 package online.pictz.api.admin.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -63,42 +62,49 @@ public class AdminTopicSuggestServiceImpl implements AdminTopicSuggestService{
             case APPROVED:
                 topicSuggest.approve(timeProvider.getCurrentTime());
                 topicRepository.findBySuggestedTopicId(suggestId).ifPresentOrElse(
-                    approveTopic-> approveTopic.changeStatus(TopicStatus.ACTIVE, timeProvider.getCurrentTime()), // 있는 토픽이라면 상태만 '활성화'
-                    () -> saveNewTopic(suggestId, topicSuggest)      // 없는 토픽이라면 DB 저장
-                );
+                    approveTopic -> updateTopic(approveTopic, topicSuggest), // 존재하는 토픽이라면 업데이트
+                    () -> saveNewTopic(suggestId, topicSuggest)); // 없다면 저장
                 return new AdminTopicSuggestUpdateResponse(status, "topic is approved", null);
+
             case REJECTED:
                 topicSuggest.reject(rejectReason, timeProvider.getCurrentTime());
                 topicRepository.findBySuggestedTopicId(suggestId).ifPresent(
-                    rejectTopic -> rejectTopic.changeStatus(TopicStatus.INACTIVE, timeProvider.getCurrentTime())
+                    rejectTopic -> rejectTopic.reject(timeProvider.getCurrentTime())
                 );
                 return new AdminTopicSuggestUpdateResponse(status, "topic is rejected", rejectReason);
+
             default:
                 throw TopicSuggestStatusNotFound.byStatus(status);
         }
     }
 
-    private void saveNewTopic(Long suggestId, TopicSuggest topicSuggest) {
+    private void updateTopic(Topic topic, TopicSuggest suggest) {
+        topic.approve(timeProvider.getCurrentTime(), suggest.getThumbnailUrl());
+        List<TopicSuggestChoiceImage> images = suggest.getChoiceImages();
+        List<Choice> choices = choiceRepository.findByTopicId(topic.getId());
+        Choice.updateFrom(choices, images);
+        choiceRepository.saveAll(choices);
+    }
+
+
+    private void saveNewTopic(Long suggestId, TopicSuggest suggest) {
 
         String slug = slugGenerator.generate();
 
         Topic newTopic = Topic.builder()
             .suggestedTopicId(suggestId)
-            .title(topicSuggest.getTitle())
+            .title(suggest.getTitle())
             .slug(slug)
-            .thumbnailImageUrl(topicSuggest.getThumbnailUrl())
+            .thumbnailImageUrl(suggest.getThumbnailUrl())
             .status(TopicStatus.ACTIVE)
             .createdAt(timeProvider.getCurrentTime())
             .build();
 
         Long topicId = topicRepository.save(newTopic).getId();
 
-        List<TopicSuggestChoiceImage> choiceImages = topicSuggest.getChoiceImages();
-        List<Choice> choices = new ArrayList<>();
-        for (TopicSuggestChoiceImage choiceImage : choiceImages) {
-            choices.add(new Choice(topicId, choiceImage.getFileName(), choiceImage.getImageUrl()));
-        }
-        choiceRepository.saveAll(choices);
+        List<TopicSuggestChoiceImage> choiceImages = suggest.getChoiceImages();
+        List<Choice> newChoices = Choice.createFrom(topicId, choiceImages);
+        choiceRepository.saveAll(newChoices);
     }
 
 }

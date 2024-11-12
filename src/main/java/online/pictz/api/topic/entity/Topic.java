@@ -40,11 +40,24 @@ public class Topic {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @Column(name = "total_vote_count", columnDefinition = "INT default 0")
+    private int totalVoteCount;
+
     protected Topic() {
     }
 
-    public void changeStatus(TopicStatus newStatus) {
-        this.status = newStatus;
+    public void approve(LocalDateTime updatedAt,String thumbnailImageUrl) {
+        this.status = TopicStatus.ACTIVE;
+        this.updatedAt = updatedAt;
+        this.thumbnailImageUrl = thumbnailImageUrl;
+    }
+
+    public void reject(LocalDateTime updatedAt) {
+        this.status = TopicStatus.INACTIVE;
+        this.updatedAt = updatedAt;
     }
 
     @Builder
