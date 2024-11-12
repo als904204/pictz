@@ -51,7 +51,7 @@
 
 .thumbnail-image {
   width: 100%;
-  max-width: 500px; /* 썸네일의 최대 너비 설정 */
+  max-width: 300px; /* 썸네일의 최대 너비 설정 */
   height: auto;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
