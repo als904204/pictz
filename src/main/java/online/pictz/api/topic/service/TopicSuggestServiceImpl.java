@@ -8,7 +8,7 @@ import online.pictz.api.common.util.time.TimeProvider;
 import online.pictz.api.image.service.ImageStorageUtils;
 import online.pictz.api.topic.dto.ChoiceImageRequest;
 import online.pictz.api.topic.dto.TopicSuggestCreate;
-import online.pictz.api.topic.dto.TopicSuggestRequest;
+import online.pictz.api.topic.dto.TopicSuggestUpdate;
 import online.pictz.api.topic.dto.TopicSuggestResponse;
 import online.pictz.api.topic.entity.TopicSuggest;
 import online.pictz.api.topic.entity.TopicSuggestChoiceImage;
@@ -112,7 +112,7 @@ public class TopicSuggestServiceImpl implements TopicSuggestService{
     @Override
     @Transactional
     public TopicSuggestResponse updateTopicSuggest(Long topicSuggestId, Long userId,
-        TopicSuggestRequest updateDto) {
+        TopicSuggestUpdate updateDto) {
 
         // 작성자 검증
         SiteUser user = getSiteUserById(userId);

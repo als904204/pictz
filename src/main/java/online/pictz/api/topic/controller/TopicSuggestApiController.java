@@ -3,7 +3,8 @@ package online.pictz.api.topic.controller;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import online.pictz.api.common.annotation.CurrentUser;
-import online.pictz.api.topic.dto.TopicSuggestRequest;
+import online.pictz.api.topic.dto.TopicSuggestCreate;
+import online.pictz.api.topic.dto.TopicSuggestUpdate;
 import online.pictz.api.topic.dto.TopicSuggestResponse;
 import online.pictz.api.topic.service.TopicSuggestService;
 import online.pictz.api.user.dto.UserDto;
@@ -26,9 +27,9 @@ public class TopicSuggestApiController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<TopicSuggestResponse> create(@CurrentUser UserDto userDto, @ModelAttribute
-    TopicSuggestRequest topicSuggestRequest) {
+    TopicSuggestCreate suggestRequest) {
         TopicSuggestResponse response = topicSuggestService.createSuggest(userDto.getId(),
-            topicSuggestRequest);
+            suggestRequest);
         return ResponseEntity.ok(response);
     }
 
@@ -52,7 +53,7 @@ public class TopicSuggestApiController {
     public ResponseEntity<TopicSuggestResponse> updateUserTopicSuggest(
         @PathVariable("topicSuggestId") Long topicSuggestId,
         @CurrentUser UserDto userDto,
-        @ModelAttribute TopicSuggestRequest updateDto) {
+        @ModelAttribute TopicSuggestUpdate updateDto) {
         TopicSuggestResponse response = topicSuggestService.updateTopicSuggest(topicSuggestId,
             userDto.getId(), updateDto);
         return ResponseEntity.ok(response);
