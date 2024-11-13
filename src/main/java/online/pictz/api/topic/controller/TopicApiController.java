@@ -24,15 +24,6 @@ public class TopicApiController {
     private final ChoiceService choiceService;
 
     /**
-     * 모든 토픽 조회
-     */
-    @Deprecated
-    public ResponseEntity<List<TopicResponse>> findAll() {
-        List<TopicResponse> responseList = topicService.findAll();
-        return ResponseEntity.ok(responseList);
-    }
-
-    /**
      * @param sortBy 최신순, 인기순
      * @param page   요청 페이지
      * @return       정렬된 Topic 목록

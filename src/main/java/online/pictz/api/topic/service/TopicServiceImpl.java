@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import online.pictz.api.common.dto.PagedResponse;
-import online.pictz.api.common.util.time.TimeProvider;
 import online.pictz.api.topic.dto.TopicResponse;
 import online.pictz.api.topic.entity.TopicSort;
 import online.pictz.api.topic.repository.TopicRepository;
@@ -19,17 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class TopicServiceImpl implements TopicService{
 
     private final TopicRepository topicRepository;
-    private final TimeProvider timeProvider;
-
-
-    @Deprecated
-    @Override
-    public List<TopicResponse> findAll() {
-        return topicRepository.findActiveTopics()
-            .stream()
-            .map(TopicResponse::from)
-            .collect(Collectors.toList());
-    }
 
     @Transactional(readOnly = true)
     @Override
