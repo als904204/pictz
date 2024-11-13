@@ -3,7 +3,7 @@ package online.pictz.api.choice.service;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import online.pictz.api.choice.dto.ChoiceVoteResult;
+import online.pictz.api.choice.dto.ChoiceCountResponse;
 import online.pictz.api.choice.dto.ChoiceResponse;
 import online.pictz.api.choice.entity.Choice;
 import online.pictz.api.choice.exception.ChoiceNotFound;
@@ -12,6 +12,7 @@ import online.pictz.api.topic.entity.Topic;
 import online.pictz.api.topic.exception.TopicNotFound;
 import online.pictz.api.topic.repository.TopicRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -34,11 +35,10 @@ public class ChoiceServiceImpl implements ChoiceService {
     /**
      * 선택지 투표 결과 조회
      */
+    @Transactional(readOnly = true)
     @Override
-    public ChoiceVoteResult getChoiceVoteResultById(Long id) {
-        Choice choice = choiceRepository.findById(id)
-            .orElseThrow(() -> ChoiceNotFound.forChoiceId(id));
-        return new ChoiceVoteResult(choice.getName(), choice.getVoteCount());
+    public List<ChoiceCountResponse> getChoiceCounts(List<Long> choiceIds) {
+        return choiceRepository.getChoiceTotalCounts(choiceIds);
     }
 
     /**

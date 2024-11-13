@@ -20,12 +20,36 @@ function loadChoices(){
         .then(data => {
             document.getElementById('loading').style.display = 'none';
             renderChoices(data);
+            setupChoicesPolling(data);
         })
         .catch(error => {
             console.error('Error fetching choices:', error);
             document.getElementById('loading').style.display = 'none';
             document.getElementById('error-message').style.display = 'block';
         });
+}
+
+/**
+ * 선택지별 총 투표 수 일정시간마다 요청
+ */
+function loadChoicesTotalCounts(choiceIds) {
+  fetch(`/api/v1/choices/count?choiceIds=${choiceIds.join(',')}`)
+    .then(response => {
+      if(!response.ok) {
+        throw new Error(`Error fetching choices counts! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      data.forEach(count => {
+         const voteCountElement = document.getElementById(`vote-count-${count.choiceId}`);
+            if (voteCountElement) {
+                const queuedVotes = voteQueue[count.choiceId] || 0;
+                voteCountElement.textContent = count.voteCount + queuedVotes;
+            }
+      });
+    })
+    .catch(error => console.error('Error fetching choices counts:', error));
 }
 
 function renderChoices(choices) {
@@ -158,4 +182,11 @@ function sendVoteBatch() {
 
 }
 
+function setupChoicesPolling(choices) {
+    const choiceIds = choices.map(choice => choice.choiceId);
+
+    setInterval(() => {
+        loadChoicesTotalCounts(choiceIds);
+    }, 3000);
+}
 
