@@ -50,12 +50,22 @@ function renderSuggestDetail(suggest) {
 
     const detailImagesContainer = document.getElementById('detailImages');
     detailImagesContainer.innerHTML = '';
-    suggest.choiceImageUrls.forEach((url, index) => {
+    suggest.choiceImages.forEach((choiceImage, index) => {
+        const imgWrapper = document.createElement('div');
+        imgWrapper.className = 'choice-image-wrapper';
+
         const img = document.createElement('img');
-        img.src = url;
+        img.src = choiceImage.imageUrl;
         img.alt = `선택지 이미지 ${index + 1}`;
         img.className = 'choice-image';
-        detailImagesContainer.appendChild(img);
+
+        const fileName = document.createElement('p');
+        fileName.textContent = choiceImage.fileName;
+        fileName.className = 'choice-image-filename';
+
+        imgWrapper.appendChild(img);
+        imgWrapper.appendChild(fileName);
+        detailImagesContainer.appendChild(imgWrapper);
     });
 
     // 상태에 따라 버튼 비활성화
