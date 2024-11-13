@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class ChoiceVoteResult {
-    private final String name;
-    private final int voteCount;
+public class ChoiceCountResponse {
+    private Long choiceId;
+    private int voteCount;
 }

@@ -2,7 +2,7 @@ package online.pictz.api.choice.service;
 
 import java.util.List;
 import online.pictz.api.choice.dto.ChoiceResponse;
-import online.pictz.api.choice.dto.ChoiceVoteResult;
+import online.pictz.api.choice.dto.ChoiceCountResponse;
 
 public interface ChoiceService {
 
@@ -12,9 +12,9 @@ public interface ChoiceService {
     List<ChoiceResponse> getChoiceListByTopicIds(List<Long> topicIds);
 
     /**
-     * 선택지 투표 결과 조회
+     * 선택지 투표 수 조회
      */
-    ChoiceVoteResult getChoiceVoteResultById(Long id);
+    List<ChoiceCountResponse> getChoiceCounts(List<Long> id);
 
     /**
      * 토픽 slug로 선택지 목록 조회
