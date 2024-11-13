@@ -1,10 +1,10 @@
 package online.pictz.api.topic.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import online.pictz.api.common.dto.PagedResponse;
+import online.pictz.api.topic.dto.TopicCountResponse;
 import online.pictz.api.topic.dto.TopicResponse;
 import online.pictz.api.topic.entity.TopicSort;
 import online.pictz.api.topic.repository.TopicRepository;
@@ -31,6 +31,12 @@ public class TopicServiceImpl implements TopicService{
             topicPage.getTotalPages(),
             topicPage.isLast()
         );
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<TopicCountResponse> getAllTopicCounts(int page) {
+        return topicRepository.getTopicTotalCounts(page);
     }
 
 }
