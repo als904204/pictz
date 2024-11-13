@@ -42,6 +42,7 @@ public class TopicRepositoryImpl implements TopicRepositoryCustom{
                 topic.title,
                 topic.slug,
                 topic.status,
+                topic.totalCount,
                 topic.thumbnailImageUrl,
                 topic.createdAt
             ))
@@ -52,8 +53,8 @@ public class TopicRepositoryImpl implements TopicRepositoryCustom{
             .limit(size)
             .fetch();
 
-        // 총 카운트
-        long total = queryFactory
+        // 토픽 총 개수
+        Long total = queryFactory
             .select(topic.count())
             .from(topic)
             .where(topic.status.eq(TopicStatus.ACTIVE))
@@ -66,7 +67,7 @@ public class TopicRepositoryImpl implements TopicRepositoryCustom{
         OrderSpecifier<?> orderSpecifier = null;
         switch (sortType) {
             case POPULAR:
-                orderSpecifier = topic.totalVoteCount.desc();
+                orderSpecifier = topic.totalCount.desc();
                 break;
             case LATEST:
                 orderSpecifier = topic.createdAt.desc();
