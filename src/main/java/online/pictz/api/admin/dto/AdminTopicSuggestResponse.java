@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
+import online.pictz.api.topic.dto.TopicSuggestChoiceImageResponse;
 
 @Builder
 @Getter
@@ -16,5 +17,5 @@ public class AdminTopicSuggestResponse {
     private String status;
     private String rejectReason;
     private LocalDateTime createdAt;
-    private List<String> choiceImageUrls;
+    private List<TopicSuggestChoiceImageResponse> choiceImages;
 }

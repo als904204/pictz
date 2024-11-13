@@ -2,6 +2,7 @@ package online.pictz.api.admin.service;
 
 import java.util.stream.Collectors;
 import online.pictz.api.admin.dto.AdminTopicSuggestResponse;
+import online.pictz.api.topic.dto.TopicSuggestChoiceImageResponse;
 import online.pictz.api.topic.entity.TopicSuggest;
 import online.pictz.api.topic.entity.TopicSuggestChoiceImage;
 import org.springframework.stereotype.Component;
@@ -19,12 +20,20 @@ public class AdminTopicSuggestConverter {
             .status(suggest.getStatus().name())
             .rejectReason(suggest.getRejectionReason())
             .createdAt(suggest.getCreatedAt())
-            .choiceImageUrls(
+            .choiceImages(
                 suggest.getChoiceImages().stream()
-                    .map(TopicSuggestChoiceImage::getImageUrl)
+                    .map(this::convertChoiceImageToResponse)
                     .collect(Collectors.toList())
             )
             .build();
+    }
+
+    private TopicSuggestChoiceImageResponse convertChoiceImageToResponse(TopicSuggestChoiceImage choiceImage) {
+        return new TopicSuggestChoiceImageResponse(
+            choiceImage.getId(),
+            choiceImage.getImageUrl(),
+            choiceImage.getFileName()
+        );
     }
 
 }

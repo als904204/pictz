@@ -56,3 +56,19 @@
     margin-top: 2rem;
     padding: 0.75rem 1.5rem;
 }
+
+.choice-image-wrapper {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.choice-image {
+    max-width: 100%;
+    height: auto;
+}
+
+.choice-image-filename {
+    margin-top: 5px;
+    font-size: 14px;
+    color: #555;
+}
