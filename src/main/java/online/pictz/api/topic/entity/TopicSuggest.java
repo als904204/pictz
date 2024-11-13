@@ -19,6 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
+import online.pictz.api.topic.exception.TopicSuggestBadRequest;
 import online.pictz.api.topic.exception.TopicSuggestForbidden;
 import online.pictz.api.user.entity.SiteUser;
 
@@ -98,45 +99,65 @@ public class TopicSuggest {
     }
 
     /**
-     * 선택지 이미지 리스트 연관관계 추가
+     * 문의 허용
+     * @param updatedAt 업데이트 요청온 시간
      */
-    public void updateChoiceImages(List<TopicSuggestChoiceImage> choiceImages) {
-        // 기존 선택지 이미지 연관관계 삭제
-        for (TopicSuggestChoiceImage existingImage : new ArrayList<>(this.choiceImages)) {
-            removeChoiceImage(existingImage);
-        }
-        // 새로운 선택지 이미지와 연관관계 설정
-        for (TopicSuggestChoiceImage newImage : choiceImages) {
-            addChoiceImage(newImage);
-        }
-    }
-
-
     public void approve(LocalDateTime updatedAt) {
         this.status = TopicSuggestStatus.APPROVED;
         this.updatedAt = updatedAt;
         this.rejectionReason = null;
     }
 
-    public void reject(String rejectionReason, LocalDateTime currentTime) {
+    /**
+     * 문의 거부
+     * @param rejectionReason 거부 이유
+     * @param updatedAt 업데이트 요청온 시간
+     */
+    public void reject(String rejectionReason, LocalDateTime updatedAt) {
         this.status = TopicSuggestStatus.REJECTED;
         this.rejectionReason = rejectionReason;
-        this.updatedAt = currentTime;
+        this.updatedAt = updatedAt;
     }
 
+    /**
+     * 문의 수정
+     * @param title 문의 제목
+     * @param updatedAt 업데이트 요청온 시간
+     * @param description 문의 설명
+     */
+    public void updateDetails(String title, LocalDateTime updatedAt, String description) {
+        this.title = title;
+        this.updatedAt = updatedAt;
+        this.description = description;
+        this.status = TopicSuggestStatus.PENDING;
+    }
+
+    /**
+     * 문의 썸네일 사진 업데이트
+     * @param newThumbnailUrl 새로운 썸네일 이미지 URL
+     */
+    public void updateThumbnailUrl(String newThumbnailUrl) {
+        this.thumbnailUrl = newThumbnailUrl;
+    }
+
+    /**
+     * 요청자, 작성자 동일한지 검증
+     * @param ownerId 작성자 ID
+     * @param currentUserId 요청자 ID
+     */
     public void validateSuggestOwner(Long ownerId, Long currentUserId) {
         if (!ownerId.equals(currentUserId)) {
             throw TopicSuggestForbidden.of(currentUserId, ownerId);
         }
     }
 
-    public void updateThumbnailUrl(String newThumbnailUrl) {
-        this.thumbnailUrl = newThumbnailUrl;
-    }
-
-    public void updateDetails(String title, LocalDateTime updatedAt, String description) {
-        this.title = title;
-        this.updatedAt = updatedAt;
-        this.description = description;
+    /**
+     * 문의 상태가 REJECTED(거부) 상태 아니면 예외 발생
+     * @param status 요청온 문의 상태
+     */
+    public void validateRejected(TopicSuggestStatus status) {
+        if (!status.equals(TopicSuggestStatus.REJECTED)) {
+            throw TopicSuggestBadRequest.of(status);
+        }
     }
 }
