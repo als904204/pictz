@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import online.pictz.api.choice.dto.ChoiceResponse;
 import online.pictz.api.choice.service.ChoiceService;
 import online.pictz.api.common.dto.PagedResponse;
+import online.pictz.api.topic.dto.TopicCountResponse;
 import online.pictz.api.topic.dto.TopicResponse;
 import online.pictz.api.topic.entity.TopicSort;
 import online.pictz.api.topic.service.TopicService;
@@ -44,6 +45,17 @@ public class TopicApiController {
     public ResponseEntity<List<ChoiceResponse>> getChoicesForTopicBySlug(@PathVariable("slug") String slug) {
         List<ChoiceResponse> response = choiceService.getChoiceListByTopicSlug(slug);
         return ResponseEntity.ok(response);
+    }
+
+    /**
+     * 페이지에 해당하는 토픽 목록 총 투표수 조회
+     * @param page 현재 페이지
+     * @return 총 투표수
+     */
+    @GetMapping("/counts")
+    public ResponseEntity<List<TopicCountResponse>> getTopicCounts(@RequestParam(defaultValue = "0") int page) {
+        List<TopicCountResponse> counts = topicService.getAllTopicCounts(page);
+        return ResponseEntity.ok(counts);
     }
 
 }

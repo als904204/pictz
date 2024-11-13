@@ -7,6 +7,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import online.pictz.api.topic.dto.TopicCountResponse;
 import online.pictz.api.topic.dto.TopicResponse;
 import online.pictz.api.topic.entity.TopicSort;
 import online.pictz.api.topic.entity.TopicStatus;
@@ -61,6 +62,29 @@ public class TopicRepositoryImpl implements TopicRepositoryCustom{
             .fetchOne();
 
         return new PageImpl<>(queryResult, PageRequest.of(page, size), total);
+    }
+
+    /**
+     * 페이지에 존재하는 토픽 총 투표수 조회
+     * @param page 현재 페이지
+     * @return 투표 수 목록
+     */
+    @Override
+    public List<TopicCountResponse> getTopicTotalCounts(int page) {
+
+        int size = 3;
+        long offset = (long) page * size;
+
+        return queryFactory
+            .select(Projections.constructor(TopicCountResponse.class,
+                topic.id,
+                topic.totalCount
+            ))
+            .from(topic)
+            .where(topic.status.eq(TopicStatus.ACTIVE))
+            .offset(offset)
+            .limit(size)
+            .fetch();
     }
 
     private OrderSpecifier<?> orderByType(TopicSort sortType) {
