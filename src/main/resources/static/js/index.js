@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadTopics();
     setupSortButtons();
     setupPagination();
+    setupTotalCountPolling();
 });
 
 let currentSortBy = 'LATEST';
@@ -25,7 +26,33 @@ function loadTopics(){
         .catch(error => console.error('Error fetching topics:', error));
 }
 
-/** 
+/**
+ *  토픽 총 투표 수 일정시간마다 요청
+ */
+function loadTopicTotalCounts() {
+  fetch(`/api/v1/topics/counts?page=${currentPage}`)
+    .then(response => {
+      if(!response.ok) {
+         throw new Error(`Error fetching counts! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      data.forEach(count => {
+        const totalCountElement = document.querySelector(`h6[data-topic-id='${count.id}']`);
+        if (totalCountElement) {
+            totalCountElement.textContent = `${count.totalCount}`;
+        }
+      });
+    })
+    .catch(error => console.error('Error fetching total counts:', error));
+}
+
+function setupTotalCountPolling() {
+    setInterval(loadTopicTotalCounts, 5000);
+}
+
+/**
 * Topic 정보 랜더링
 */
 function renderTopicList(topics) {
@@ -56,6 +83,7 @@ function renderTopicList(topics) {
 
       let totalCount = document.createElement('h6');
       totalCount.className = 'card-title text-center text-secondary';
+      totalCount.setAttribute('data-topic-id', topic.id);
       totalCount.textContent = topic.totalCount;
 
       // 투표 버튼
