@@ -1,5 +1,8 @@
 package online.pictz.api.topic.entity;
 
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -37,6 +40,27 @@ public class TopicSuggestChoiceImage {
     public TopicSuggestChoiceImage(String imageUrl, String fileName) {
         this.imageUrl = imageUrl;
         this.fileName = fileName;
+    }
+
+    /**
+     * 이미지 정보 업데이트
+     * @param newImageUrl 새로운 이미지 URL
+     * @param newFileName 새로운 이미지 파일 이름
+     */
+    public void updateImageDetail(String newImageUrl, String newFileName) {
+        this.imageUrl = newImageUrl;
+        this.fileName = newFileName;
+    }
+
+    /**
+     * 토픽문의 선택지 이미지를 ID 키로 하는 Map 반환
+     * @param suggest 선택지 이미지를 포함한 토픽문의 객체
+     * @return 선택지 이미지 ID를 키로 하는 Map
+     */
+    public static Map<Long, TopicSuggestChoiceImage> getImageIdMap(TopicSuggest suggest) {
+        return suggest.getChoiceImages()
+            .stream()
+            .collect(Collectors.toMap(TopicSuggestChoiceImage::getId, Function.identity()));
     }
 
 }

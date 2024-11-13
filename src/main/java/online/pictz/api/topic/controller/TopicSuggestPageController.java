@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class TopicSuggestPageController {
 
     @GetMapping("/suggest")
-    public String topicSuggestPage() {
+    public String topicSuggestCreate() {
         return "suggest";
     }
 

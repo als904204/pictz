@@ -43,7 +43,8 @@ public class SecurityConfig {
     private static final String[] WHITE_CSRF_LIST_URL = {
         "/api/v1/votes/bulk",
         "/api/v1/topic-suggests",
-        "/api/v1/admin/topic-suggests/**"
+        "/api/v1/admin/topic-suggests/**",
+        "/api/v1/topic-suggests/**"
     };
 
     @Bean

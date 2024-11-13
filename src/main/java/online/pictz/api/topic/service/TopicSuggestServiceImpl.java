@@ -1,12 +1,14 @@
 package online.pictz.api.topic.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import online.pictz.api.image.service.ImageStorageService;
 import online.pictz.api.common.util.time.TimeProvider;
 import online.pictz.api.image.service.ImageStorageUtils;
-import online.pictz.api.topic.dto.TopicSuggestRequest;
+import online.pictz.api.topic.dto.ChoiceImageRequest;
+import online.pictz.api.topic.dto.TopicSuggestCreate;
+import online.pictz.api.topic.dto.TopicSuggestUpdate;
 import online.pictz.api.topic.dto.TopicSuggestResponse;
 import online.pictz.api.topic.entity.TopicSuggest;
 import online.pictz.api.topic.entity.TopicSuggestChoiceImage;
@@ -31,14 +33,14 @@ public class TopicSuggestServiceImpl implements TopicSuggestService{
     private final TopicSuggestResponseConverter converter;
 
     /**
-     * 토픽 문의를 생성한다
+     * 토픽 문의 생성
      * @param siteUserId 토픽 문의 유저 id
      * @param suggestRequest 토픽 문의 내용
      * @return 토픽 문의 응답
      */
     @Transactional
     @Override
-    public TopicSuggestResponse createSuggest(Long siteUserId, TopicSuggestRequest suggestRequest) {
+    public TopicSuggestResponse createSuggest(Long siteUserId, TopicSuggestCreate suggestRequest) {
 
         SiteUser siteUser = getSiteUserById(siteUserId);
 
@@ -55,12 +57,10 @@ public class TopicSuggestServiceImpl implements TopicSuggestService{
             .status(TopicSuggestStatus.PENDING)
             .build();
 
-        // '토픽 문의 선택지 이미지' 이미지 저장 후 '토픽 문의' 엔티티에 추가
-        for (MultipartFile choiceImageFile : suggestRequest.getChoiceImages()) {
-            String choiceImageUrl = imageStorageService.storeImage(choiceImageFile);
-            String choiceImageName = ImageStorageUtils.cleanFilename(choiceImageFile.getOriginalFilename());
-            TopicSuggestChoiceImage choiceImage = new TopicSuggestChoiceImage(choiceImageUrl,
-                choiceImageName);
+        for (MultipartFile file : suggestRequest.getChoiceImages()) {
+            String choiceImageUrl = imageStorageService.storeImage(file);
+            String choiceImageName = ImageStorageUtils.cleanFilename(file.getOriginalFilename());
+            TopicSuggestChoiceImage choiceImage = new TopicSuggestChoiceImage(choiceImageUrl, choiceImageName);
             suggest.addChoiceImage(choiceImage);
         }
 
@@ -71,7 +71,7 @@ public class TopicSuggestServiceImpl implements TopicSuggestService{
 
 
     /**
-     * 로그인한 유저의 토픽 문의 목록을 조회한다
+     * 로그인한 유저의 토픽 문의 목록 조회
      * @param siteUserId 로그인 유저 id
      * @return 해당 유저의 토픽 목록 리스트
      */
@@ -87,72 +87,95 @@ public class TopicSuggestServiceImpl implements TopicSuggestService{
         return converter.toResponseList(suggests);
     }
 
+    /**
+     * 로그인한 유저의 토픽 문의 상세 정보 조회
+     * @param suggestId 조회할 문의 id
+     * @param userId    로그인 유저 id
+     * @return 토픽 문의 상세 정보
+     */
     @Transactional
     @Override
     public TopicSuggestResponse getUserTopicSuggestDetail(Long suggestId, Long userId) {
         SiteUser user = getSiteUserById(userId);
         TopicSuggest suggest = getSuggestById(suggestId);
         suggest.validateSuggestOwner(suggest.getUser().getId(), user.getId());
-
         return converter.toResponse(suggest);
     }
 
     /**
-     *
-     * @param topicSuggestId 수정할 토픽 문의
-     * @param userId         요청한 사용자 id
+     * 토픽 문의 수정
+     * @param topicSuggestId 수정할 토픽 문의 id
+     * @param userId         로그인 유저 id
      * @param updateDto      수정 내용
-     * @return
+     * @return 수정된 정보
      */
-    @Transactional
     @Override
+    @Transactional
     public TopicSuggestResponse updateTopicSuggest(Long topicSuggestId, Long userId,
-        TopicSuggestRequest updateDto) {
+        TopicSuggestUpdate updateDto) {
 
-        // 1. 요청한 작성자가 수정하려는 문의 작성자인지 검증한다.
+        // 작성자 검증
         SiteUser user = getSiteUserById(userId);
         TopicSuggest suggest = getSuggestById(topicSuggestId);
-
         suggest.validateSuggestOwner(suggest.getUser().getId(), user.getId());
 
-        // 2. 제목과 설명을 업데이트 한다.
+        // 거부 상태가 아닌데 요청 올 경우 검증
+        suggest.validateRejected(suggest.getStatus());
+
+        // 사진 필드를 제외한 나머지 필드 업데이트
         suggest.updateDetails(updateDto.getTitle(), timeProvider.getCurrentTime(),
             updateDto.getDescription());
 
-        // 3. 썸네일을 업데이트 한다.
+        // 썸네일 사진 업로드 했을 경우
         if (updateDto.getThumbnail() != null && !updateDto.getThumbnail().isEmpty()) {
-            // 기존 썸네일 삭제
             imageStorageService.deleteImage(suggest.getThumbnailUrl());
             String newThumbnailUrl = imageStorageService.storeImage(updateDto.getThumbnail());
             suggest.updateThumbnailUrl(newThumbnailUrl);
         }
 
-        // 4. 선택지 이미지를 업데이트 한다
-        List<MultipartFile> choiceImageFiles = updateDto.getChoiceImages();
-        if (choiceImageFiles != null && !choiceImageFiles.isEmpty()) {
-            List<TopicSuggestChoiceImage> choiceImages = suggest.getChoiceImages();
-
-            // 기존 선택지 이미지 삭제
-            List<String> existsChoiceImagesUrl = choiceImages.stream()
-                .map(TopicSuggestChoiceImage::getImageUrl)
-                .collect(Collectors.toList());
-            imageStorageService.deleteImages(existsChoiceImagesUrl);
-
-            List<TopicSuggestChoiceImage> newChoiceImages = choiceImageFiles.stream()
-                .map(file -> {
-                    String imageUrl = imageStorageService.storeImage(file);
-                    String imageName = ImageStorageUtils.cleanFilename(file.getOriginalFilename());
-                    return new TopicSuggestChoiceImage(imageUrl, imageName);
-                })
-                .collect(Collectors.toList());
-
-            suggest.updateChoiceImages(newChoiceImages);
+        // 선택지 사진 업로드 했을 경우
+        List<ChoiceImageRequest> imageRequests = updateDto.getChoiceImages();
+        if (imageRequests != null) {
+            updateImageDetail(imageRequests, suggest);
         }
 
-        // 5. 업데이트된 suggest 저장
+        // 업데이트된 suggest 저장
         topicSuggestRepository.save(suggest);
 
         return converter.toResponse(suggest);
+    }
+
+    private void updateImageDetail(List<ChoiceImageRequest> imageRequests, TopicSuggest suggest) {
+
+        Map<Long, TopicSuggestChoiceImage> existingImgMap = TopicSuggestChoiceImage.getImageIdMap(suggest);
+
+        for (ChoiceImageRequest imgRequest : imageRequests) {
+
+            // 빈 객체가 올 경우 다음 배열 진행
+            if (imgRequest == null) {
+                continue;
+            }
+
+            MultipartFile newImgFile = imgRequest.getChoiceImage();
+
+            // 해당 배열에 업로드한 이미지가 없을 경우 다음 배열 진행
+            if (newImgFile == null || newImgFile.isEmpty()) {
+                continue;
+            }
+
+            TopicSuggestChoiceImage existingImg = existingImgMap.get(imgRequest.getId());
+
+            // 요청온 ID의 기존 이미지가 없다면 다음 배열 진행
+            if (existingImg == null) {
+                continue;
+            }
+
+            imageStorageService.deleteImage(existingImg.getImageUrl());
+            String newImgUrl = imageStorageService.storeImage(newImgFile);
+            String newFilename = ImageStorageUtils.cleanFilename(newImgUrl);
+
+            existingImg.updateImageDetail(newImgUrl, newFilename);
+        }
     }
 
     private TopicSuggest getSuggestById(Long suggestId) {
