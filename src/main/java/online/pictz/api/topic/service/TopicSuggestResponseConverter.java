@@ -12,8 +12,9 @@ public class TopicSuggestResponseConverter {
 
     public TopicSuggestResponse toResponse(TopicSuggest suggest) {
         List<TopicSuggestChoiceImageResponse> choiceImages = suggest.getChoiceImages().stream()
-            .map(choiceImage -> new TopicSuggestChoiceImageResponse(choiceImage.getImageUrl(),
-                choiceImage.getFileName()))
+            .map(choiceImage ->
+                new TopicSuggestChoiceImageResponse(choiceImage.getId(), choiceImage.getImageUrl(),
+                    choiceImage.getFileName()))
             .collect(Collectors.toList());
 
         return new TopicSuggestResponse(
