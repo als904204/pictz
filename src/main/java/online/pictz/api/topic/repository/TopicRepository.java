@@ -1,11 +1,12 @@
 package online.pictz.api.topic.repository;
 
-import java.util.List;
 import java.util.Optional;
 import online.pictz.api.topic.entity.Topic;
 import online.pictz.api.topic.repository.dsl.TopicRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface TopicRepository extends JpaRepository<Topic, Long>, TopicRepositoryCustom {
 
@@ -13,15 +14,9 @@ public interface TopicRepository extends JpaRepository<Topic, Long>, TopicReposi
 
     Optional<Topic> findBySuggestedTopicId(Long suggestedTopicId);
 
-    boolean existsByTitle(String title);
-
-    boolean existsBySlug(String slug);
-
-    @Query(
-        value = "SELECT * " +
-            "FROM topic t " +
-            "WHERE t.status = 'ACTIVE'",
-        nativeQuery = true)
-    List<Topic> findActiveTopics();
-
+    @Modifying
+    @Query("UPDATE Topic t "
+        + " SET t.totalCount = t.totalCount + :increment "
+        + " WHERE t.id = :topicId")
+    int incrementTotalCount(@Param("topicId") Long topicId, @Param("increment") int increment);
 }

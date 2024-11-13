@@ -43,8 +43,8 @@ public class Topic {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @Column(name = "total_vote_count", columnDefinition = "INT default 0")
-    private int totalVoteCount;
+    @Column(name = "total_count", nullable = false)
+    private int totalCount = 0;
 
     protected Topic() {
     }
