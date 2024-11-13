@@ -17,6 +17,7 @@ public class TopicResponse {
     private String title;
     private String slug;
     private TopicStatus status;
+    private int totalCount;
     private String thumbnailImageUrl;
     private LocalDateTime createdAt;
 
@@ -31,6 +32,7 @@ public class TopicResponse {
             .title(topic.getTitle())
             .slug(topic.getSlug())
             .status(topic.getStatus())
+            .totalCount(topic.getTotalCount())
             .thumbnailImageUrl(topic.getThumbnailImageUrl())
             .createdAt(topic.getCreatedAt())
             .build();
