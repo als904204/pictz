@@ -34,7 +34,7 @@ function renderTopicList(topics) {
 
   topics.forEach(topic => {
       const col = document.createElement('div');
-      col.className = 'col-lg-4 col-md-6 col-sm-12';
+      col.className = 'col-lg-4 col-md-4 col-sm-12';
 
       const card = document.createElement('div');
       card.className = 'card h-100';
@@ -53,6 +53,11 @@ function renderTopicList(topics) {
       title.className = 'card-title text-center';
       title.textContent = topic.title;
 
+
+      let totalCount = document.createElement('h6');
+      totalCount.className = 'card-title text-center text-secondary';
+      totalCount.textContent = topic.totalCount;
+
       // 투표 버튼
       const detailButton = document.createElement('a');
       detailButton.href = `/topics/${topic.slug}`; // 상세 페이지 URL (필요 시 수정)
@@ -65,6 +70,7 @@ function renderTopicList(topics) {
 
       // 카드 구성
       cardBody.appendChild(title);
+      cardBody.appendChild(totalCount);
       cardBody.appendChild(choicesContainer);
       cardBody.appendChild(detailButton);
 
