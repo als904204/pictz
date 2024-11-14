@@ -58,4 +58,13 @@ public class TopicApiController {
         return ResponseEntity.ok(counts);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<PagedResponse<TopicResponse>> search(
+        @RequestParam("q") String query,
+        @RequestParam(defaultValue = "POPULAR") TopicSort sortBy,
+        @RequestParam(defaultValue = "0") int page) {
+        PagedResponse<TopicResponse> response = topicService.searchTopics(query, sortBy, page);
+        return ResponseEntity.ok(response);
+    }
+
 }

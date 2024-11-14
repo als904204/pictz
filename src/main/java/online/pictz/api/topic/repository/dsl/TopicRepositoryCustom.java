@@ -11,4 +11,6 @@ public interface TopicRepositoryCustom {
     Page<TopicResponse> findActiveTopics(TopicSort sortType, int page);
 
     List<TopicCountResponse> getTopicTotalCounts(int page);
+
+    Page<TopicResponse> searchTopics(String query, TopicSort sortType, int page);
 }

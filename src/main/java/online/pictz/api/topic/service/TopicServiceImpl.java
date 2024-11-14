@@ -19,6 +19,12 @@ public class TopicServiceImpl implements TopicService{
 
     private final TopicRepository topicRepository;
 
+    /**
+     * 페이지에 해당하는 토픽 조회
+     * @param sortType 정렬 조건
+     * @param page 현재 페이지
+     * @return 토픽 목록
+     */
     @Transactional(readOnly = true)
     @Override
     public PagedResponse<TopicResponse> getActiveTopics(TopicSort sortType, int page) {
@@ -33,10 +39,36 @@ public class TopicServiceImpl implements TopicService{
         );
     }
 
+    /**
+     * 토픽 총 투표 수 조회
+     * @param page 현재 페이지
+     * @return 토픽 투표 수
+     */
     @Transactional(readOnly = true)
     @Override
     public List<TopicCountResponse> getAllTopicCounts(int page) {
         return topicRepository.getTopicTotalCounts(page);
+    }
+
+    /**
+     * 토픽 검색
+     * @param query 검색 쿼리
+     * @param sortBy 정렬 조건
+     * @param page 현재 페이지
+     * @return 토픽 검색 결과
+     */
+    @Transactional(readOnly = true)
+    @Override
+    public PagedResponse<TopicResponse> searchTopics(String query, TopicSort sortBy, int page) {
+        Page<TopicResponse> queryResult = topicRepository.searchTopics(query, sortBy, page);
+        return new PagedResponse<>(
+            queryResult.getContent(),
+            queryResult.getNumber(),
+            queryResult.getSize(),
+            queryResult.getTotalElements(),
+            queryResult.getTotalPages(),
+            queryResult.isLast()
+        );
     }
 
 }
