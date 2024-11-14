@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TopicSuggestRepository extends JpaRepository<TopicSuggest, Long> {
     List<TopicSuggest> findByUserId(Long userId);
+
+    boolean existsByTitle(String title);
 }

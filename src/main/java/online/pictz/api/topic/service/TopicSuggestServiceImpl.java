@@ -13,6 +13,7 @@ import online.pictz.api.topic.dto.TopicSuggestResponse;
 import online.pictz.api.topic.entity.TopicSuggest;
 import online.pictz.api.topic.entity.TopicSuggestChoiceImage;
 import online.pictz.api.topic.entity.TopicSuggestStatus;
+import online.pictz.api.topic.exception.TopicSuggestDuplicate;
 import online.pictz.api.topic.exception.TopicSuggestNotFound;
 import online.pictz.api.topic.repository.TopicSuggestRepository;
 import online.pictz.api.user.entity.SiteUser;
@@ -34,7 +35,8 @@ public class TopicSuggestServiceImpl implements TopicSuggestService{
 
     /**
      * 토픽 문의 생성
-     * @param siteUserId 토픽 문의 유저 id
+     *
+     * @param siteUserId     토픽 문의 유저 id
      * @param suggestRequest 토픽 문의 내용
      * @return 토픽 문의 응답
      */
@@ -43,13 +45,18 @@ public class TopicSuggestServiceImpl implements TopicSuggestService{
     public TopicSuggestResponse createSuggest(Long siteUserId, TopicSuggestCreate suggestRequest) {
 
         SiteUser siteUser = getSiteUserById(siteUserId);
+        String title = suggestRequest.getTitle();
+
+        if (topicSuggestRepository.existsByTitle(title)) {
+            throw TopicSuggestDuplicate.title(title);
+        }
 
         // 토픽 썸네일 이미지 저장 후 URL 리턴
         String thumbnailUrl = imageStorageService.storeImage(suggestRequest.getThumbnail());
 
         // '토픽 문의' 엔티티 인스턴스 생성
         TopicSuggest suggest = TopicSuggest.builder()
-            .title(suggestRequest.getTitle())
+            .title(title)
             .description(suggestRequest.getDescription())
             .user(siteUser)
             .thumbnailUrl(thumbnailUrl)
@@ -60,7 +67,8 @@ public class TopicSuggestServiceImpl implements TopicSuggestService{
         for (MultipartFile file : suggestRequest.getChoiceImages()) {
             String choiceImageUrl = imageStorageService.storeImage(file);
             String choiceImageName = ImageStorageUtils.cleanFilename(file.getOriginalFilename());
-            TopicSuggestChoiceImage choiceImage = new TopicSuggestChoiceImage(choiceImageUrl, choiceImageName);
+            TopicSuggestChoiceImage choiceImage = new TopicSuggestChoiceImage(choiceImageUrl,
+                choiceImageName);
             suggest.addChoiceImage(choiceImage);
         }
 

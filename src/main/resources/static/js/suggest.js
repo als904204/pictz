@@ -22,6 +22,10 @@ function sendForm() {
     })
     .then(response => {
       if(!response.ok) {
+         if(response.status === 409) {
+            alert('이미 존재하는 문의 제목입니다.')
+            throw new Error(`Error submitting form! status : ${response.status}`);
+         }
         alert('에러가 발생했습니다')
         throw new Error(`Error submitting form! status : ${response.status}`);
       }
