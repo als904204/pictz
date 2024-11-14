@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupTotalCountPolling();
 });
 
-let currentSortBy = 'LATEST';
+let currentSortBy = 'POPULAR';
 let currentPage = 0;
 
 /**

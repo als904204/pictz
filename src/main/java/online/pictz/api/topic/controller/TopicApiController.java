@@ -31,7 +31,7 @@ public class TopicApiController {
      */
     @GetMapping
     public ResponseEntity<PagedResponse<TopicResponse>> getActiveTopics(
-        @RequestParam(defaultValue = "LATEST") TopicSort sortBy,
+        @RequestParam(defaultValue = "POPULAR") TopicSort sortBy,
         @RequestParam(defaultValue = "0") int page
     ) {
         PagedResponse<TopicResponse> response = topicService.getActiveTopics(sortBy, page);
