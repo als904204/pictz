@@ -1,0 +1,11 @@
+#search-status {
+    font-size: 1.1em;
+    color: #333;
+}
+#search-loading {
+    display: none;
+}
+#search-error-message {
+    display: none;
+    color: red;
+}

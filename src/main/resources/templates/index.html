@@ -5,7 +5,9 @@
 <head>
   <title th:text="${title}">Home Page</title>
   <link rel="stylesheet" th:href="@{/css/index.css}">
+  <link rel="stylesheet" th:href="@{/css/search.css}">
   <script defer th:src="@{/js/index.js}"></script>
+  <script defer th:src="@{/js/search.js}"></script>
 </head>
 
 <body>
@@ -22,12 +24,15 @@
       <!-- 검색 창 -->
       <div class="col search-session">
         <div class="input-group">
-          <input type="text" class="form-control" placeholder="검색" aria-label="검색" aria-describedby="search-button">
+          <input type="text" class="form-control" id="search-input" placeholder="검색" aria-label="검색" aria-describedby="search-button">
           <button class="btn btn-outline-secondary" type="button" id="search-button">
             <i class="bi bi-search"></i>
           </button>
         </div>
       </div>
+      <div id="search-status" class="mt-2"></div>
+      <div id="search-loading">검색 중...</div>
+      <div id="search-error-message">검색 중 에러가 발생했습니다.</div>
 
     </div>
   </div>
