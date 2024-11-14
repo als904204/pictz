@@ -12,4 +12,5 @@ public interface TopicService {
 
     List<TopicCountResponse> getAllTopicCounts(int page);
 
+    PagedResponse<TopicResponse> searchTopics(String query, TopicSort sortBy, int page);
 }
