@@ -2,6 +2,7 @@ package online.pictz.api.topic.repository.dsl;
 
 import static online.pictz.api.topic.entity.QTopic.topic;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -21,20 +22,16 @@ import org.springframework.stereotype.Repository;
 public class TopicRepositoryImpl implements TopicRepositoryCustom{
 
     private final JPAQueryFactory queryFactory;
+    private static final int PAGE_ITEM_SIZE = 3; // 페이지당 항목 수
 
     @Override
     public Page<TopicResponse> findActiveTopics(TopicSort sortType, int page) {
 
-        if (sortType == null) {
-            sortType = TopicSort.LATEST;
-        }
+
+        long offset = (long) page * PAGE_ITEM_SIZE;
 
         // 최신순, 인기순
         OrderSpecifier<?> orderBy = orderByType(sortType);
-
-        // 페이지당 항목 수
-        int size = 3;
-        long offset = (long) page * size;
 
         List<TopicResponse> queryResult = queryFactory
             .select(Projections.constructor(TopicResponse.class,
@@ -51,17 +48,17 @@ public class TopicRepositoryImpl implements TopicRepositoryCustom{
             .where(topic.status.eq(TopicStatus.ACTIVE))
             .orderBy(orderBy)
             .offset(offset)
-            .limit(size)
+            .limit(PAGE_ITEM_SIZE)
             .fetch();
 
         // 토픽 총 개수
         Long total = queryFactory
-            .select(topic.count())
+            .select(topic.count().coalesce(0L))
             .from(topic)
             .where(topic.status.eq(TopicStatus.ACTIVE))
             .fetchOne();
 
-        return new PageImpl<>(queryResult, PageRequest.of(page, size), total);
+        return new PageImpl<>(queryResult, PageRequest.of(page, PAGE_ITEM_SIZE), total);
     }
 
     /**
@@ -72,8 +69,7 @@ public class TopicRepositoryImpl implements TopicRepositoryCustom{
     @Override
     public List<TopicCountResponse> getTopicTotalCounts(int page) {
 
-        int size = 3;
-        long offset = (long) page * size;
+        long offset = (long) page * PAGE_ITEM_SIZE;
 
         return queryFactory
             .select(Projections.constructor(TopicCountResponse.class,
@@ -83,9 +79,47 @@ public class TopicRepositoryImpl implements TopicRepositoryCustom{
             .from(topic)
             .where(topic.status.eq(TopicStatus.ACTIVE))
             .offset(offset)
-            .limit(size)
+            .limit(PAGE_ITEM_SIZE)
             .fetch();
     }
+
+    @Override
+    public Page<TopicResponse> searchTopics(String query, TopicSort sortType, int page) {
+
+        long offset = (long) page * PAGE_ITEM_SIZE;
+
+        OrderSpecifier<?> orderBy = orderByType(sortType);
+
+        BooleanBuilder builder = searchByKeyword(query);
+
+        List<TopicResponse> queryResult = queryFactory
+            .select(Projections.constructor(TopicResponse.class,
+                topic.id,
+                topic.suggestedTopicId,
+                topic.title,
+                topic.slug,
+                topic.status,
+                topic.totalCount,
+                topic.thumbnailImageUrl,
+                topic.createdAt
+            ))
+            .from(topic)
+            .where(topic.status.eq(TopicStatus.ACTIVE).and(builder))
+            .orderBy(orderBy)
+            .offset(offset)
+            .limit(PAGE_ITEM_SIZE)
+            .fetch();
+
+        // 검색 조건을 포함하여 토픽 총 개수 계산
+        Long total = queryFactory
+            .select(topic.count().coalesce(0L))
+            .from(topic)
+            .where(topic.status.eq(TopicStatus.ACTIVE).and(builder))
+            .fetchOne();
+
+        return new PageImpl<>(queryResult, PageRequest.of(page, PAGE_ITEM_SIZE), total);
+    }
+
 
     private OrderSpecifier<?> orderByType(TopicSort sortType) {
         OrderSpecifier<?> orderSpecifier = null;
@@ -98,5 +132,13 @@ public class TopicRepositoryImpl implements TopicRepositoryCustom{
                 break;
         }
         return orderSpecifier;
+    }
+
+    private BooleanBuilder searchByKeyword(String keyword) {
+        BooleanBuilder builder = new BooleanBuilder();
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            builder.and(topic.title.containsIgnoreCase(keyword));
+        }
+        return builder;
     }
 }
