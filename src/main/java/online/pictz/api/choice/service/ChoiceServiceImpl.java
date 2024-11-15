@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import online.pictz.api.choice.dto.ChoiceCountResponse;
 import online.pictz.api.choice.dto.ChoiceResponse;
 import online.pictz.api.choice.entity.Choice;
-import online.pictz.api.choice.exception.ChoiceNotFound;
 import online.pictz.api.choice.repository.ChoiceRepository;
 import online.pictz.api.topic.entity.Topic;
 import online.pictz.api.topic.exception.TopicNotFound;
@@ -33,7 +32,7 @@ public class ChoiceServiceImpl implements ChoiceService {
     }
 
     /**
-     * 선택지 투표 결과 조회
+     * 선택지 투표 총 합
      */
     @Transactional(readOnly = true)
     @Override
