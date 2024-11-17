@@ -22,11 +22,11 @@ class ChoiceTest {
     }
 
     @Test
-    void updateVoteCount() {
+    void updateCount() {
 
         // when
-        choice.updateVoteCount(10);
-        int result = choice.getVoteCount();
+        choice.updateCount(10);
+        int result = choice.getCount();
 
         // then
         assertThat(result).isEqualTo(10);

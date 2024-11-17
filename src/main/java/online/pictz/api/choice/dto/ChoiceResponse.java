@@ -16,7 +16,7 @@ public class ChoiceResponse {
         this.topicId = choice.getTopicId();
         this.name = choice.getName();
         this.imageUrl = choice.getImageUrl();
-        this.voteCount = choice.getVoteCount();
+        this.voteCount = choice.getCount();
         this.choiceId = choice.getId();
     }
 

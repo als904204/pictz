@@ -1,6 +1,7 @@
 package online.pictz.api.topic.service;
 
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import online.pictz.api.common.dto.PagedResponse;
@@ -8,6 +9,7 @@ import online.pictz.api.topic.dto.TopicCountResponse;
 import online.pictz.api.topic.dto.TopicResponse;
 import online.pictz.api.topic.entity.TopicSort;
 import online.pictz.api.topic.repository.TopicRepository;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,6 +71,24 @@ public class TopicServiceImpl implements TopicService{
             queryResult.getTotalPages(),
             queryResult.isLast()
         );
+    }
+
+    /**
+     * 토픽의 총 투표수 업데이트
+     *
+     * topicId
+     * @param topicVoteMap (topicId : count)
+     */
+    @Override
+    public void updateTopicTotalCounts(Map<Long, Integer> topicVoteMap) {
+        for (Map.Entry<Long, Integer> e : topicVoteMap.entrySet()) {
+            Long topicId = e.getKey();
+            Integer voteTotalCount = e.getValue();
+            int updatedRows = topicRepository.incrementTotalCount(topicId, voteTotalCount);
+            if (updatedRows == 0) {
+                throw new OptimisticLockingFailureException("Failed to update totalCount for Topic ID: " + topicId);
+            }
+        }
     }
 
 }

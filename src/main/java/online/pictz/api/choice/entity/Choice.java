@@ -33,8 +33,8 @@ public class Choice {
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
-    @Column(name = "vote_count", columnDefinition = "INT default 0")
-    private int voteCount;
+    @Column(name = "count", columnDefinition = "INT default 0")
+    private int count;
 
     @Version
     private int version;
@@ -50,8 +50,8 @@ public class Choice {
         this.choiceImageId = choiceImageId;
     }
 
-    public void updateVoteCount(int voteCount) {
-        this.voteCount += voteCount;
+    public void updateCount(int count) {
+        this.count += count;
     }
 
     public void updateImageDetail(String imageUrl, String fileName) {
