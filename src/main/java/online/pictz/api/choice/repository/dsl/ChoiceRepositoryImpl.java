@@ -31,7 +31,7 @@ public class ChoiceRepositoryImpl implements ChoiceRepositoryCustom{
         return queryFactory
             .select(Projections.constructor(ChoiceCountResponse.class,
                 choice.id,
-                choice.voteCount
+                choice.count
             ))
             .from(choice)
             .where(choice.id.in(choiceIds))

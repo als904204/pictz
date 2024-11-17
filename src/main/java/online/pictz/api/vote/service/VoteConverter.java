@@ -26,7 +26,7 @@ public class VoteConverter {
      * 투표 정보 목록 entity 로 변환
      */
     public List<Vote> convertToVoteEntities(List<VoteRequest> voteRequests, String ip, LocalDateTime voteAt) {
-        List<Vote> votesToSave = new ArrayList<>();
+        List<Vote> votes = new ArrayList<>();
         for (VoteRequest vote : voteRequests) {
             Vote voteEntity = Vote.builder()
                 .choiceId(vote.getChoiceId())
@@ -34,13 +34,14 @@ public class VoteConverter {
                 .ip(ip)
                 .votedAt(voteAt)
                 .build();
-            votesToSave.add(voteEntity);
+            votes.add(voteEntity);
         }
-        return votesToSave;
+        return votes;
     }
 
     /**
      * choiceId 별 투표 회수 Map 생성
+     * choiceId(1) : count(100)
      */
     public Map<Long, Integer> convertToVoteCountMap(List<VoteRequest> voteRequests) {
         Map<Long, Integer> voteCountMap = new ConcurrentHashMap<>();
