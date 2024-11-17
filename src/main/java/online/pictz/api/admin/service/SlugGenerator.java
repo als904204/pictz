@@ -1,4 +1,4 @@
-package online.pictz.api.topic.service;
+package online.pictz.api.admin.service;
 
 public interface SlugGenerator {
 

@@ -17,7 +17,6 @@ import online.pictz.api.topic.exception.TopicNotFound;
 import online.pictz.api.topic.exception.TopicSuggestStatusNotFound;
 import online.pictz.api.topic.repository.TopicRepository;
 import online.pictz.api.topic.repository.TopicSuggestRepository;
-import online.pictz.api.topic.service.SlugGenerator;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

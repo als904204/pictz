@@ -1,4 +1,4 @@
-package online.pictz.api.topic.service;
+package online.pictz.api.admin.service;
 
 import java.security.SecureRandom;
 import org.springframework.stereotype.Component;
