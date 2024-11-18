@@ -1,5 +1,6 @@
 package online.pictz.api.topic.service;
 
+import static online.pictz.api.util.TestUtils.createImageFile;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -263,13 +264,6 @@ class TopicSuggestServiceImplTest {
         assertThat(exception.getHttpStatus()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
-    private MultipartFile createImageFile(String file, String name, String type, String content) {
-        return new MockMultipartFile(
-            file,
-            name,
-            type,
-            content.getBytes()
-        );
-    }
+
 
 }
