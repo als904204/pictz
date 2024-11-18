@@ -11,7 +11,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
+import online.pictz.api.common.util.random.UuidHolder;
 import online.pictz.api.image.exception.StorageException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
@@ -26,14 +26,18 @@ public class LocalImageStorageService implements ImageStorageService{
     private final Path storageSuffix;
     private final String baseUrl;
     private final String imagesPath;
+    private final UuidHolder uuidHolder;
 
     public LocalImageStorageService(
         @Value("${storage.local.path}") String storagePath,
         @Value("${storage.local.base-url}") String baseUrl,
-        @Value("${storage.local.images-path}") String imagesPath) {
+        @Value("${storage.local.images-path}") String imagesPath,
+        UuidHolder uuidHolder) {
+
         this.storageSuffix = Paths.get(storagePath).toAbsolutePath().normalize();
         this.baseUrl = baseUrl;
         this.imagesPath = imagesPath;
+        this.uuidHolder = uuidHolder;
         try {
             Files.createDirectories(this.storageSuffix);
         } catch (IOException e) {
@@ -53,7 +57,7 @@ public class LocalImageStorageService implements ImageStorageService{
                 throw StorageException.notImageFile();
             }
             String fileExtension = getFileExtension(fileName);
-            String uuidFileName = UUID.randomUUID() + "." + fileExtension;
+            String uuidFileName = uuidHolder.random() + "." + fileExtension;
 
             Path targetLocation = storageSuffix.resolve(uuidFileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
