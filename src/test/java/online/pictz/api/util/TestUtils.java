@@ -1,6 +1,8 @@
 package online.pictz.api.util;
 
 import java.lang.reflect.Field;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 public class TestUtils {
 
@@ -21,6 +23,15 @@ public class TestUtils {
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    public static MultipartFile createImageFile(String file, String name, String type, String content) {
+        return new MockMultipartFile(
+            file,
+            name,
+            type,
+            content.getBytes()
+        );
     }
 
 }
