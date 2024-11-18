@@ -9,7 +9,7 @@ public interface AdminTopicSuggestService {
 
     List<AdminTopicSuggestResponse> getAllTopicSuggests();
 
-    AdminTopicSuggestResponse getTopicById(Long id);
+    AdminTopicSuggestResponse getSuggestById(Long id);
 
     AdminTopicSuggestUpdateResponse patchTopicSuggestStatus(Long id, TopicSuggestStatus status, String reason);
 }

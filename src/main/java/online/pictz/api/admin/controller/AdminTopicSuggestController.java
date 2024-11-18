@@ -31,7 +31,7 @@ public class AdminTopicSuggestController {
 
     @GetMapping("/{id}")
     public ResponseEntity<AdminTopicSuggestResponse> getTopicSuggestById(@PathVariable("id") Long id) {
-        AdminTopicSuggestResponse response = adminTopicSuggestService.getTopicById(id);
+        AdminTopicSuggestResponse response = adminTopicSuggestService.getSuggestById(id);
         return ResponseEntity.ok(response);
     }
 

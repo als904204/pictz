@@ -43,7 +43,7 @@ public class AdminTopicSuggestServiceImpl implements AdminTopicSuggestService{
 
     @Transactional(readOnly = true)
     @Override
-    public AdminTopicSuggestResponse getTopicById(Long id) {
+    public AdminTopicSuggestResponse getSuggestById(Long id) {
         return topicSuggestRepository.findById(id)
             .map(converter::convertToResponse)
             .orElseThrow(() -> TopicNotFound.byId(id));
