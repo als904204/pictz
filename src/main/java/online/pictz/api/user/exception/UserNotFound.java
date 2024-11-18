@@ -13,6 +13,7 @@ public class UserNotFound extends PictzException {
     public static UserNotFound of(String providerId) {
         return new UserNotFound(String.format("User with providerId '%s' not found", providerId));
     }
+
     public static UserNotFound of(Long id) {
         return new UserNotFound(String.format("User with id '%s' not found", id));
     }
