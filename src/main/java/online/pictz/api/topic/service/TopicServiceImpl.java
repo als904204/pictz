@@ -9,6 +9,7 @@ import online.pictz.api.topic.dto.TopicCountResponse;
 import online.pictz.api.topic.dto.TopicResponse;
 import online.pictz.api.topic.entity.TopicSort;
 import online.pictz.api.topic.repository.TopicRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -23,13 +24,20 @@ public class TopicServiceImpl implements TopicService{
 
     /**
      * 페이지에 해당하는 토픽 조회
+     *
      * @param sortType 정렬 조건
-     * @param page 현재 페이지
+     * @param page     현재 페이지
      * @return 토픽 목록
      */
     @Transactional(readOnly = true)
     @Override
+    @Cacheable(
+        value = "popularTopics",
+        key = "'POPULAR-' + #page", // 캐시 키: 'POPULAR-' + 페이지 번호
+        condition = "#sortType == T(online.pictz.api.topic.entity.TopicSort).POPULAR" // POPULAR 정렬일 때만 캐시 적용
+    )
     public PagedResponse<TopicResponse> getActiveTopics(TopicSort sortType, int page) {
+
         Page<TopicResponse> topicPage = topicRepository.findActiveTopics(sortType, page);
         return new PagedResponse<>(
             topicPage.getContent(),
