@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 let currentSortBy = 'POPULAR';
 let currentPage = 0;
+let totalPages = 0;
 
 /**
  * Topics 목록 api 요청
@@ -169,7 +170,8 @@ function setupPagination() {
 /**
  * 페이징 정보 기반으로 페이지 네비게이션 UI 업데이트
  */
-function updatePagination(currentPage, totalPages) {
+function updatePagination(currentPage, totalPagesParam) {
+    totalPages = totalPagesParam;
     const pagination = document.querySelector('.pagination');
     pagination.innerHTML = ''; // 기존 페이지 버튼 초기화
 

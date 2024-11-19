@@ -41,6 +41,7 @@ application-dev.yml
 
 ### imges ###
 /uploads
+/storagePath
 
 ### Qclass ###
 /src/main/generated
