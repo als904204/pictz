@@ -16,7 +16,7 @@ public class ImageStorageUtils {
     public static boolean isImageFile(String filename) {
         String extension = getFileExtension(filename).toLowerCase();
         return extension.equals("jpg") || extension.equals("jpeg") ||
-            extension.equals("png") || extension.equals("bmp");
+            extension.equals("png") || extension.equals("bmp") || extension.equals("webp");
     }
 
     /**
