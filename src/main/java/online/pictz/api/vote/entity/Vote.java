@@ -23,18 +23,14 @@ public class Vote {
     @Column(name = "choice_id", nullable = false)
     private Long choiceId;
 
-    @Column(name = "ip", nullable = false)
-    private String ip;
-
     @Column(name = "voted_at", nullable = false)
     private LocalDateTime votedAt;
 
     private int count;
 
     @Builder
-    public Vote(Long choiceId, String ip, LocalDateTime votedAt, int count) {
+    public Vote(Long choiceId, LocalDateTime votedAt, int count) {
         this.choiceId = choiceId;
-        this.ip = ip;
         this.votedAt = votedAt;
         this.count = count;
     }

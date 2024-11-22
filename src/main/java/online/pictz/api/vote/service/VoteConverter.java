@@ -25,13 +25,12 @@ public class VoteConverter {
     /**
      * 투표 정보 목록 entity 로 변환
      */
-    public List<Vote> convertToVoteEntities(List<VoteRequest> voteRequests, String ip, LocalDateTime voteAt) {
+    public List<Vote> convertToVoteEntities(List<VoteRequest> voteRequests, LocalDateTime voteAt) {
         List<Vote> votes = new ArrayList<>();
         for (VoteRequest vote : voteRequests) {
             Vote voteEntity = Vote.builder()
                 .choiceId(vote.getChoiceId())
                 .count(vote.getCount())
-                .ip(ip)
                 .votedAt(voteAt)
                 .build();
             votes.add(voteEntity);

@@ -51,7 +51,6 @@ class VoteServiceImplTest {
         voteService = new VoteServiceImpl(
             voteRepository,
             choiceRepository,
-            ipExtractor,
             timeProvider,
             voteConverter,
             voteValidator,
