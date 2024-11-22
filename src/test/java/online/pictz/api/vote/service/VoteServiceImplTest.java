@@ -8,9 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import online.pictz.api.choice.entity.Choice;
 import online.pictz.api.choice.repository.ChoiceRepository;
-import online.pictz.api.common.util.network.IpExtractor;
 import online.pictz.api.common.util.time.TimeProvider;
-import online.pictz.api.mock.TestIpExtractor;
 import online.pictz.api.mock.TestTimeProvider;
 import online.pictz.api.topic.service.TopicService;
 import online.pictz.api.util.TestUtils;
@@ -41,7 +39,6 @@ class VoteServiceImplTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        IpExtractor ipExtractor = new TestIpExtractor("1.1.1.1");
         TimeProvider timeProvider = new TestTimeProvider(LocalDateTime.of(2024, 1, 1, 1, 1));
         VoteConverter voteConverter = new VoteConverter();
         VoteProcessor voteProcessor = new VoteProcessor(voteConverter);
