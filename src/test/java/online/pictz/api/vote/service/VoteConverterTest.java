@@ -53,16 +53,12 @@ class VoteConverterTest {
 
         List<VoteRequest> voteRequests = List.of(new VoteRequest(choiceId, count));
 
-        String ip = "1.1.1.1";
-
         // when
-        List<Vote> votes = voteConverter.convertToVoteEntities(voteRequests, ip,
-            timeProvider.getCurrentTime());
+        List<Vote> votes = voteConverter.convertToVoteEntities(voteRequests, timeProvider.getCurrentTime());
 
         // then
         assertThat(votes.get(0).getChoiceId()).isEqualTo(choiceId);
         assertThat(votes.get(0).getCount()).isEqualTo(count);
-        assertThat(votes.get(0).getIp()).isEqualTo(ip);
     }
 
     @DisplayName("투표 정보 Map으로 변환")

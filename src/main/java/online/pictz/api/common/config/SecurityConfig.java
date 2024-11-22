@@ -42,6 +42,7 @@ public class SecurityConfig {
     // TODO : CSRF 토큰 처리 추후 변경해야 함
     private static final String[] WHITE_CSRF_LIST_URL = {
         "/api/v1/votes/bulk",
+        "/api/v1/votes",
         "/api/v1/topic-suggests",
         "/api/v1/admin/topic-suggests/**",
         "/api/v1/topic-suggests/**"
