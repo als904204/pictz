@@ -6,7 +6,6 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import online.pictz.api.choice.entity.Choice;
 import online.pictz.api.choice.repository.ChoiceRepository;
-import online.pictz.api.common.util.network.IpExtractor;
 import online.pictz.api.common.util.time.TimeProvider;
 import online.pictz.api.topic.service.TopicService;
 import online.pictz.api.vote.dto.VoteRequest;
@@ -23,7 +22,6 @@ public class VoteServiceImpl implements VoteService{
 
     private final VoteRepository voteRepository;
     private final ChoiceRepository choiceRepository;
-    private final IpExtractor ipExtractor;
     private final TimeProvider timeProvider;
     private final VoteConverter voteConverter;
     private final VoteValidator voteValidator;
@@ -33,8 +31,10 @@ public class VoteServiceImpl implements VoteService{
 
     /**
      * 투표 저장
+     * 멀티 쓰레드 동시성 문제 및 성능, DB 과부하 문제
      * @param voteRequests
      */
+    @Deprecated
     @Transactional
     @Override
     public void voteBulk(List<VoteRequest> voteRequests) {
@@ -54,9 +54,7 @@ public class VoteServiceImpl implements VoteService{
                 topicService.updateTopicTotalCounts(topicVoteIncrements);
 
                 // 투표(Vote) 정보 저장
-                String ip = ipExtractor.extractIp();
-                List<Vote> votes = voteConverter.convertToVoteEntities(voteRequests, ip,
-                    timeProvider.getCurrentTime());
+                List<Vote> votes = voteConverter.convertToVoteEntities(voteRequests, timeProvider.getCurrentTime());
                 voteRepository.saveAll(votes);
 
                 break;
