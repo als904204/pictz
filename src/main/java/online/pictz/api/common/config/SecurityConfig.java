@@ -34,18 +34,18 @@ public class SecurityConfig {
     };
 
     private static final String[] WHITE_API_LIST_URL = {
-        "/api/v1/topics/**",
-        "/api/v1/votes/**",
-        "/api/v1/choices/**"
+        "/api/optimistic/topics/**",
+        "/api/optimistic/votes/**",
+        "/api/optimistic/choices/**"
     };
 
     // TODO : CSRF 토큰 처리 추후 변경해야 함
     private static final String[] WHITE_CSRF_LIST_URL = {
-        "/api/v1/votes/bulk",
-        "/api/v1/votes",
-        "/api/v1/topic-suggests",
-        "/api/v1/admin/topic-suggests/**",
-        "/api/v1/topic-suggests/**"
+        "/api/optimistic/votes/bulk",
+        "/api/optimistic/votes",
+        "/api/optimistic/topic-suggests",
+        "/api/optimistic/admin/topic-suggests/**",
+        "/api/optimistic/topic-suggests/**"
     };
 
     @Bean
@@ -60,7 +60,7 @@ public class SecurityConfig {
                 .antMatchers(WHITE_STATIC_LIST_URL).permitAll()
                 .antMatchers(WHITE_API_LIST_URL).permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                .antMatchers("/api/optimistic/admin/**").hasRole("ADMIN")
                 .antMatchers("login").anonymous()
                 .anyRequest().authenticated()
             )

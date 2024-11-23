@@ -6,6 +6,8 @@ import java.util.Map;
 import online.pictz.api.choice.entity.Choice;
 import online.pictz.api.util.TestUtils;
 import online.pictz.api.vote.dto.VoteRequest;
+import online.pictz.api.vote.service.optimistic.VoteConverter;
+import online.pictz.api.vote.service.optimistic.VoteProcessor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

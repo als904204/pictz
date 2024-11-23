@@ -1,4 +1,4 @@
-package online.pictz.api.vote.service;
+package online.pictz.api.vote.service.optimistic;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

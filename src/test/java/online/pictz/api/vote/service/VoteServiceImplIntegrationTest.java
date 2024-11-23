@@ -11,6 +11,7 @@ import online.pictz.api.choice.entity.Choice;
 import online.pictz.api.choice.repository.ChoiceRepository;
 import online.pictz.api.vote.dto.VoteRequest;
 import online.pictz.api.vote.repository.VoteRepository;
+import online.pictz.api.vote.service.optimistic.VoteServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

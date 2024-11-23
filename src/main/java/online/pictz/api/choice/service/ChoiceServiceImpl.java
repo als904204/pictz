@@ -12,7 +12,7 @@ import online.pictz.api.choice.repository.ChoiceRepository;
 import online.pictz.api.topic.entity.Topic;
 import online.pictz.api.topic.exception.TopicNotFound;
 import online.pictz.api.topic.repository.TopicRepository;
-import online.pictz.api.vote.service.test.InMemoryChoiceStorage;
+import online.pictz.api.vote.service.memory.InMemoryChoiceStorage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

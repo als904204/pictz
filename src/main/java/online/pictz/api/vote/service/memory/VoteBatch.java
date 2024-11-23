@@ -1,4 +1,4 @@
-package online.pictz.api.vote.service.test;
+package online.pictz.api.vote.service.memory;
 
 import java.util.ArrayList;
 import java.util.HashMap;

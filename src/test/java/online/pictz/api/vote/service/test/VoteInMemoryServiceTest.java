@@ -2,6 +2,8 @@ package online.pictz.api.vote.service.test;
 
 import java.util.List;
 import online.pictz.api.vote.dto.VoteRequest;
+import online.pictz.api.vote.service.memory.VoteBatch;
+import online.pictz.api.vote.service.memory.VoteInMemoryService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 import online.pictz.api.vote.dto.VoteRequest;
 import online.pictz.api.vote.exception.VoteTooManyRequests;
+import online.pictz.api.vote.service.optimistic.VoteValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

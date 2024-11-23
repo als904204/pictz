@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('ADMIN')")
-@RequestMapping("/api/v1/admin/topic-suggests")
+@RequestMapping("/api/optimistic/admin/topic-suggests")
 @RestController
 public class AdminTopicSuggestController {
 

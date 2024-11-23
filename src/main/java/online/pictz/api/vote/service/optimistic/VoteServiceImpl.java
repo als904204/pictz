@@ -1,4 +1,4 @@
-package online.pictz.api.vote.service;
+package online.pictz.api.vote.service.optimistic;
 
 
 import java.util.List;
@@ -12,13 +12,14 @@ import online.pictz.api.vote.dto.VoteRequest;
 import online.pictz.api.vote.entity.Vote;
 import online.pictz.api.vote.exception.VoteTooManyRequests;
 import online.pictz.api.vote.repository.VoteRepository;
+import online.pictz.api.vote.service.VoteService;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-public class VoteServiceImpl implements VoteService{
+public class VoteServiceImpl implements VoteService {
 
     private final VoteRepository voteRepository;
     private final ChoiceRepository choiceRepository;
