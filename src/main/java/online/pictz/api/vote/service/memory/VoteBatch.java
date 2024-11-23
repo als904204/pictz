@@ -27,7 +27,7 @@ public class VoteBatch {
     @Transactional
     public void processBatchVotes() {
 
-        log.info("Start the vote batch...");
+        log.info("Preparing batch for memory vote ");
         // 인 메모리 투표 결과 가져오기
         Map<Long, Integer> inMemoryChoices = choiceStorage.getAndClearStorage();
         if (inMemoryChoices.isEmpty()) {
@@ -54,6 +54,7 @@ public class VoteBatch {
             return;
         }
 
+        log.info("batches run successfully");
         voteBatchProcessor.updateChoices(existsChoicesMap);
         voteBatchProcessor.updateTopic(existsChoicesMap, existsChoices);
         voteBatchProcessor.insertVoteRecords(existsChoicesMap, timeProvider.getCurrentTime());
