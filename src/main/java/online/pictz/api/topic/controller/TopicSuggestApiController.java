@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/optimistic/topic-suggests")
+@RequestMapping("/api/v1/topic-suggests")
 @RestController
 public class TopicSuggestApiController {
 

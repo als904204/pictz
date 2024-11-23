@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/api/optimistic/topics")
+@RequestMapping("/api/v1/topics")
 @RequiredArgsConstructor
 @RestController
 public class TopicApiController {
