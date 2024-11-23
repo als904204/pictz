@@ -2,6 +2,7 @@ package online.pictz.api.common.config;
 
 
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.Scheduler;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.springframework.cache.CacheManager;
@@ -25,6 +26,7 @@ public class CacheConfig {
         return Caffeine.newBuilder()
             .maximumSize(1000)
             .expireAfterWrite(5, TimeUnit.SECONDS)
+            .scheduler(Scheduler.systemScheduler())
             .recordStats();
     }
 
