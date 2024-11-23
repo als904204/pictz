@@ -64,4 +64,9 @@ public class InMemoryChoiceStorage {
         return currentCounts;
     }
 
+    public int getCount(Long choiceId) {
+        AtomicInteger atomicInteger = choiceStorage.get(choiceId);
+        return atomicInteger != null ? atomicInteger.get() : 0;
+    }
+
 }
