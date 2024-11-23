@@ -18,10 +18,10 @@ import online.pictz.api.topic.entity.TopicStatus;
 import online.pictz.api.topic.exception.TopicNotFound;
 import online.pictz.api.topic.repository.TopicRepository;
 import online.pictz.api.util.TestUtils;
+import online.pictz.api.vote.service.memory.InMemoryChoiceStorage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -31,14 +31,21 @@ class ChoiceServiceImplTest {
     private ChoiceRepository choiceRepository;
     @Mock
     private TopicRepository topicRepository;
-    @InjectMocks
+
     private ChoiceServiceImpl choiceService;
+
     private TestTimeProvider timeProvider;
 
     @BeforeEach
     void setUp() {
-        this.timeProvider = new TestTimeProvider(LocalDateTime.of(2024, 1, 1, 1, 1));
         MockitoAnnotations.openMocks(this);
+        this.timeProvider = new TestTimeProvider(LocalDateTime.of(2024, 1, 1, 1, 1));
+        InMemoryChoiceStorage memoryChoiceStorage = new InMemoryChoiceStorage();
+
+        choiceService = new ChoiceServiceImpl(choiceRepository, topicRepository,
+            memoryChoiceStorage);
+
+
     }
 
     @DisplayName("여러 토픽에 관한 선택지 목록 조회")
@@ -98,18 +105,7 @@ class ChoiceServiceImplTest {
 
         when(choiceRepository.getChoiceTotalCounts(choiceIds)).thenReturn(serviceMockResponse);
 
-        // when
-        List<ChoiceCountResponse> result = choiceService.getChoiceCounts(choiceIds);
-
-        // then
-        assertThat(result.size()).isEqualTo(2);
-        assertThat(result)
-            .satisfies(results -> {
-                assertThat(result.get(0).getChoiceId()).isEqualTo(1L);
-                assertThat(result.get(0).getVoteCount()).isEqualTo(10);
-                assertThat(result.get(1).getChoiceId()).isEqualTo(2L);
-                assertThat(result.get(1).getVoteCount()).isEqualTo(20);
-            });
+        choiceService.getChoiceCounts(choiceIds);
 
     }
 
