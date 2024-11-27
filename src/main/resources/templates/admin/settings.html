@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+<head>
+  <title>Profile</title>
+  <link rel="stylesheet" th:href="@{/css/settings.css}">
+  <script defer th:src="@{/js/admin/suggest-list.js}"></script>
+</head>
+
+<body>
+<div layout:fragment="content">
+  <div class="container mt-4">
+    <h1 class="mb-4">토픽 요청 목록</h1>
+    <table class="table table-hover" id="suggestsTable">
+      <thead class="table-light">
+      <tr>
+        <th>번호</th>
+        <th>Suggest 이름</th>
+        <th>요청자</th>
+        <th>요청일</th>
+        <th>상태</th>
+      </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</body>
+</html>

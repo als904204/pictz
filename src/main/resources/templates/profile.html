@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+<head>
+  <title>Profile</title>
+  <link rel="stylesheet" th:href="@{/css/profile.css}">
+  <script defer th:src="@{/js/profile.js}"></script>
+</head>
+
+<body>
+<div layout:fragment="content">
+  <div class="container mt-5">
+    <!-- 프로필 카드 -->
+    <div class="card shadow-sm mb-4" style="background-color: #f0f8ff;">
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col-auto">
+            <div class="profile-icon">
+              <i class="bi bi-person" style="font-size: 3rem;"></i>
+            </div>
+          </div>
+          <div class="col">
+            <h2 id="userNickname" class="mb-0">Loading...</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 문의 목록 카드 -->
+    <div class="card shadow-sm">
+      <div class="card-header bg-white">
+        <h5 class="card-title mb-0">
+          <i class="bi bi-list-ul me-2"></i>내 컨텐츠 신청 목록
+        </h5>
+      </div>
+      <div class="card-body">
+        <div id="loading" class="text-center mb-4" style="display: none;">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+
+        <div id="my-suggest-list" class="list-group list-group-flush">
+
+        </div>
+
+        <div id="emptyMessage" class="text-center text-muted p-4" style="display: none;">
+          컨텐츠 신청한 내역이 없습니다.
+        </div>
+      </div>
+    </div>
+
+    <div id="error-message" class="alert alert-danger text-center mt-3" role="alert" style="display: none;">
+      에러가 발생했습니다. 다시 시도해 주세요.
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,74 @@
+.detail-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.status-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.meta-info {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.section-title {
+    color: #343a40;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.thumbnail-container {
+    width: 300px;  /* 썸네일 컨테이너 너비 고정 */
+    height: 200px; /* 썸네일 컨테이너 높이 고정 */
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 1rem 0;
+}
+
+.thumbnail-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* 이미지 비율 유지하면서 컨테이너에 맞춤 */
+}
+
+.choice-image {
+    width: 150px;    /* 선택지 이미지 너비 */
+    height: 150px;   /* 선택지 이미지 높이 */
+    object-fit: contain; /* 이미지 비율 유지 */
+    border-radius: 8px;
+    margin: 0.5rem;
+    transition: transform 0.2s;
+}
+
+.choice-image:hover {
+    transform: scale(1.05);
+}
+
+.back-button {
+    margin-top: 2rem;
+    padding: 0.75rem 1.5rem;
+}
+
+.choice-image-wrapper {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.choice-image {
+    max-width: 100%;
+    height: auto;
+}
+
+.choice-image-filename {
+    margin-top: 5px;
+    font-size: 14px;
+    color: #555;
+}

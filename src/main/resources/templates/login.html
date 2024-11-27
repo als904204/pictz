@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+<head>
+  <title>투표</title>
+  <link rel="stylesheet" th:href="@{/css/login.css}">
+  <script defer th:src="@{/js/login.js}"></script>
+</head>
+
+<body>
+<div layout:fragment="content">
+  <div class="container">
+    <div class="row justify-content-center align-items-center">
+      <div class="col-md-6 col-lg-4">
+        <div class="card shadow-lg border-0">
+          <div class="card-body p-5">
+            <!-- 로딩 스피너 -->
+            <div id="loading" class="text-center mb-4" style="display: none;">
+              <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+            </div>
+
+            <div class="text-center mb-4">
+              <h2 class="fw-bold mb-4">환영합니다!</h2>
+              <p class="text-muted">계정에 로그인하세요</p>
+            </div>
+
+            <!-- 구글 로그인 버튼 -->
+            <div class="d-grid gap-2">
+              <a th:href="@{/oauth2/authorization/google}"
+                 class="btn btn-light btn-lg border d-flex align-items-center justify-content-center gap-2">
+                <img th:src="@{/images/google-icon.png}" alt="Google" width="20" height="20"
+                     onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg'"/>
+                Google로 계속하기
+              </a>
+            </div>
+
+            <!-- 알림 메시지 -->
+            <div class="mt-4">
+              <div th:if="${param.error}" class="alert alert-danger text-center" role="alert">
+                <i class="bi bi-exclamation-circle-fill me-2"></i>
+                로그인에 실패했습니다.
+              </div>
+              <div th:if="${param.logout}" class="alert alert-success text-center" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                로그아웃 되었습니다.
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

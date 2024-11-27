@@ -1,0 +1,29 @@
+.card {
+    border-radius: 15px;
+    border: none;
+}
+
+.card-header {
+    border-top-left-radius: 15px !important;
+    border-top-right-radius: 15px !important;
+    border-bottom: 1px solid rgba(0,0,0,.1);
+}
+
+.profile-icon {
+    color: #4a90e2;
+}
+
+.list-group-item {
+    border-left: none;
+    border-right: none;
+    transition: background-color 0.2s;
+}
+
+.list-group-item:hover {
+    background-color: #f8f9fa;
+}
+
+#userNickname {
+    color: #2c3e50;
+    font-weight: 600;
+}
