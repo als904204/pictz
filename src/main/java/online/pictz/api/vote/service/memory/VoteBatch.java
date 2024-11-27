@@ -23,7 +23,7 @@ public class VoteBatch {
     private final TimeProvider timeProvider;
     private final InMemoryChoiceStorage choiceStorage;
 
-    @Scheduled(fixedRate = 15000)
+    @Scheduled(fixedRate = 10000)
     @Transactional
     public void processBatchVotes() {
 
