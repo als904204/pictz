@@ -34,7 +34,7 @@ public class TopicServiceImpl implements TopicService{
     @Cacheable(
         value = "popularTopics",
         key = "'POPULAR-' + #page", // 캐시 키: 'POPULAR-' + 페이지 번호
-        condition = "#sortType == T(online.pictz.api.topic.entity.TopicSort).POPULAR" // POPULAR 정렬일 때만 캐시 적용
+        condition = "#sortType == T(online.pictz.api.topic.entity.TopicSort).POPULAR && #page < 5" // POPULAR 정렬일 때만 캐시 적용
     )
     public PagedResponse<TopicResponse> getActiveTopics(TopicSort sortType, int page) {
 

@@ -25,7 +25,7 @@ public class CacheConfig {
     public Caffeine<Object, Object> popularTopicsCaffeineConfig() {
         return Caffeine.newBuilder()
             .maximumSize(1000)
-            .expireAfterWrite(5, TimeUnit.SECONDS)
+            .expireAfterWrite(10, TimeUnit.SECONDS)
             .scheduler(Scheduler.systemScheduler())
             .recordStats();
     }
