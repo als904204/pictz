@@ -22,13 +22,13 @@ public class VoteApiController {
      * 멀티쓰레드 동시성 문제 및 요청마다 DB 쓰기로 인한 과부하 발생
      */
     @Deprecated
-    @PostMapping
+    @PostMapping("/optimistic")
     public ResponseEntity<Void> voteBulk(@RequestBody List<VoteRequest> voteRequest) {
         voteService.voteBulk(voteRequest);
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<Void> voteBulkInMemory(@RequestBody List<VoteRequest> voteRequest) {
         voteService.voteBulk(voteRequest);
         return ResponseEntity.noContent().build();
