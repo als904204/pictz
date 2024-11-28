@@ -1,8 +1,8 @@
 package online.pictz.api.image.service;
 
-import static online.pictz.api.image.service.ImageStorageUtils.extractFilename;
-import static online.pictz.api.image.service.ImageStorageUtils.getFileExtension;
-import static online.pictz.api.image.service.ImageStorageUtils.isImageFile;
+import static online.pictz.api.common.util.image.ImageStorageUtils.extractFilename;
+import static online.pictz.api.common.util.image.ImageStorageUtils.getFileExtension;
+import static online.pictz.api.common.util.image.ImageStorageUtils.isImageFile;
 
 import java.io.IOException;
 import java.nio.file.Files;

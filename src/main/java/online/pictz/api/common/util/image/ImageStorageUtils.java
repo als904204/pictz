@@ -1,4 +1,4 @@
-package online.pictz.api.image.service;
+package online.pictz.api.common.util.image;
 
 import java.util.Objects;
 import online.pictz.api.image.exception.StorageException;
