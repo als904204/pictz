@@ -5,7 +5,7 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import online.pictz.api.image.service.ImageStorageService;
 import online.pictz.api.common.util.time.TimeProvider;
-import online.pictz.api.image.service.ImageStorageUtils;
+import online.pictz.api.common.util.image.ImageStorageUtils;
 import online.pictz.api.topic.dto.ChoiceImageRequest;
 import online.pictz.api.topic.dto.TopicSuggestCreate;
 import online.pictz.api.topic.dto.TopicSuggestUpdate;
