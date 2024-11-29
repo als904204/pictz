@@ -1,9 +1,12 @@
 package online.pictz.api.image.service;
 
+import static online.pictz.api.common.util.image.ImageStorageUtils.extractFilename;
 import static online.pictz.api.common.util.image.ImageStorageUtils.getFileExtension;
 import static online.pictz.api.common.util.image.ImageStorageUtils.isImageFile;
 
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import java.io.IOException;
 import java.util.List;
@@ -26,6 +29,10 @@ public class S3ImageStorageService implements ImageStorageService{
 
     @Value("${s3.bucket}")
     private String bucket;
+
+
+    @Value("${s3.base-url}")
+    private String baseUrl;
 
     @Override
     public String storeImage(MultipartFile file) {
@@ -57,11 +64,27 @@ public class S3ImageStorageService implements ImageStorageService{
 
     @Override
     public void deleteImage(String imageUrl) {
-
+        String fileName = extractFilename(imageUrl);
+        try {
+            s3Client.deleteObject(new DeleteObjectRequest(bucket, fileName));
+        } catch (AmazonServiceException e) {
+            throw S3StorageException.deleteFailed(fileName, e.getMessage());
+        }
     }
 
     @Override
     public void deleteImages(List<String> imageUrls) {
+        if (imageUrls == null || imageUrls.isEmpty()) return;
+        for (String imageUrl : imageUrls) {
+            deleteImage(imageUrl);
+        }
+    }
 
+    private String extractFilename(String imageUrl) {
+        if (imageUrl.startsWith(baseUrl)) {
+            return imageUrl.substring(baseUrl.length());
+        } else {
+            throw StorageException.invalidFilePath(imageUrl);
+        }
     }
 }
