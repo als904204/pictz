@@ -13,12 +13,12 @@ public class UserPageController {
         if (user != null) {
             return "redirect:/";
         }
-        return "/login";
+        return "login";
     }
 
     @GetMapping("/profile")
     public String profile() {
-        return "/profile";
+        return "profile";
     }
 
 }
