@@ -11,5 +11,5 @@ spring:
       max-file-size: 5MB
       max-request-size: 25MB
       # 파일 임계값 설정
-      file-size-threshold: 2KB
+      file-size-threshold: 10KB
       enabled: true
