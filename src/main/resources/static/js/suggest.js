@@ -26,7 +26,11 @@ function sendForm() {
             alert('이미 존재하는 문의 제목입니다.')
             throw new Error(`Error submitting form! status : ${response.status}`);
          }
-        alert('에러가 발생했습니다')
+         if(response.status === 413) {
+            alert('사진의 용량이 너무 큽니다.')
+            throw new Error(`Error submitting form! status : ${response.status}`);
+         }
+        alert('알 수 없는 에러가 발생했습니다')
         throw new Error(`Error submitting form! status : ${response.status}`);
       }
       return response.json();
