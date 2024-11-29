@@ -19,6 +19,11 @@ public class S3StorageException extends PictzException {
         return new S3StorageException("Failed to upload file to S3: " + e.getMessage(), e);
     }
 
+    public static S3StorageException deleteFailed(String fileName, String message) {
+        return new S3StorageException(
+            "Failed to delete file in S3: " + fileName + ", error : " + message);
+    }
+
     @Override
     public HttpStatus getHttpStatus() {
         return HttpStatus.INTERNAL_SERVER_ERROR;
