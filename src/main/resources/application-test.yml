@@ -1,4 +1,13 @@
 spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: lalala
+            client-secret: hohoho
+            scope: profile,email
+            redirect-uri: http://localhost:8080/asdf
   datasource:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
@@ -11,3 +20,13 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+storage:
+  local:
+    path: ./uploads
+    base-url: http://localhost:8080
+    images-path: /images/
+
+nickname:
+  api:
+    url: https://www.rivestsoft.com/nickname/getRandomNickname.ajax
