@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-@Profile("dev")
+@Profile({"dev", "test"})
 @Service
 public class LocalImageStorageService implements ImageStorageService{
 
