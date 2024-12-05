@@ -12,7 +12,7 @@ import online.pictz.api.choice.repository.ChoiceRepository;
 import online.pictz.api.topic.entity.Topic;
 import online.pictz.api.topic.exception.TopicNotFound;
 import online.pictz.api.topic.repository.TopicRepository;
-import online.pictz.api.vote.service.memory.InMemoryChoiceStorage;
+import online.pictz.api.vote.service.memory.atmoic.AtomicChoiceStorage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +22,7 @@ public class ChoiceServiceImpl implements ChoiceService {
 
     private final ChoiceRepository choiceRepository;
     private final TopicRepository topicRepository;
-    private final InMemoryChoiceStorage choiceStorage;
+    private final AtomicChoiceStorage choiceStorage;
 
     /**
      * 여러 토픽에 관한 선택지 목록 조회

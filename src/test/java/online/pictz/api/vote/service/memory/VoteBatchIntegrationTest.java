@@ -19,6 +19,7 @@ import online.pictz.api.mock.TestTimeProvider;
 import online.pictz.api.topic.entity.Topic;
 import online.pictz.api.topic.entity.TopicStatus;
 import online.pictz.api.topic.repository.TopicRepository;
+import online.pictz.api.vote.service.memory.atmoic.AtomicChoiceStorage;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +27,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +47,7 @@ class VoteBatchIntegrationTest {
     private TopicRepository topicRepository;
 
     @Autowired
-    private InMemoryChoiceStorage choiceStorage;
+    private AtomicChoiceStorage choiceStorage;
 
     @Autowired
     private EntityManager entityManager;

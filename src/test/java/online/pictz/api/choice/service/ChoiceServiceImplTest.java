@@ -18,7 +18,7 @@ import online.pictz.api.topic.entity.TopicStatus;
 import online.pictz.api.topic.exception.TopicNotFound;
 import online.pictz.api.topic.repository.TopicRepository;
 import online.pictz.api.util.TestUtils;
-import online.pictz.api.vote.service.memory.InMemoryChoiceStorage;
+import online.pictz.api.vote.service.memory.atmoic.AtomicChoiceStorage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,7 +40,7 @@ class ChoiceServiceImplTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         this.timeProvider = new TestTimeProvider(LocalDateTime.of(2024, 1, 1, 1, 1));
-        InMemoryChoiceStorage memoryChoiceStorage = new InMemoryChoiceStorage();
+        AtomicChoiceStorage memoryChoiceStorage = new AtomicChoiceStorage();
 
         choiceService = new ChoiceServiceImpl(choiceRepository, topicRepository,
             memoryChoiceStorage);

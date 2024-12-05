@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import online.pictz.api.choice.entity.Choice;
 import online.pictz.api.choice.repository.ChoiceRepository;
 import online.pictz.api.common.util.time.TimeProvider;
+import online.pictz.api.vote.service.memory.atmoic.AtomicChoiceStorage;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +22,7 @@ public class VoteBatch {
     private final VoteBatchProcessor voteBatchProcessor;
     private final ChoiceRepository choiceRepository;
     private final TimeProvider timeProvider;
-    private final InMemoryChoiceStorage choiceStorage;
+    private final AtomicChoiceStorage choiceStorage;
 
     @Scheduled(fixedRate = 10000)
     @Transactional
