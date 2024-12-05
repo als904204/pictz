@@ -4,7 +4,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import online.pictz.api.vote.dto.VoteRequest;
 import online.pictz.api.vote.service.VoteService;
-import online.pictz.api.vote.service.memory.atmoic.AtomicChoiceStorage;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class VoteInMemoryService implements VoteService {
 
-    private final AtomicChoiceStorage choiceStorage;
+    private final InMemoryChoiceStorage choiceStorage;
 
     @Override
     public void voteBulk(List<VoteRequest> voteRequests) {

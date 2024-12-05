@@ -5,10 +5,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import online.pictz.api.vote.service.memory.InMemoryChoiceStorage;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
+@Primary
 @Component
-public class AtomicChoiceStorage {
+public class AtomicChoiceStorage implements InMemoryChoiceStorage {
 
     // 멀티 쓰레드 안전
     private final ConcurrentHashMap<Long, AtomicInteger> choiceStorage = new ConcurrentHashMap<>();
