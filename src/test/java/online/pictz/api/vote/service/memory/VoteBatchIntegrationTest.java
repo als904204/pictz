@@ -19,6 +19,7 @@ import online.pictz.api.mock.TestTimeProvider;
 import online.pictz.api.topic.entity.Topic;
 import online.pictz.api.topic.entity.TopicStatus;
 import online.pictz.api.topic.repository.TopicRepository;
+import online.pictz.api.vote.service.memory.atmoic.AtomicChoiceStorage;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +27,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +47,7 @@ class VoteBatchIntegrationTest {
     private TopicRepository topicRepository;
 
     @Autowired
-    private InMemoryChoiceStorage choiceStorage;
+    private AtomicChoiceStorage choiceStorage;
 
     @Autowired
     private EntityManager entityManager;
@@ -56,16 +56,12 @@ class VoteBatchIntegrationTest {
         LocalDateTime.of(2024, 1, 1, 1, 1)
     );
 
+    private Long topicId;
+    private Long choice1Id;
+    private Long choice2Id;
 
     @BeforeEach
     void setup() {
-
-        List<Choice> choices = List.of(
-            new Choice(1L, "메시", "메시 이미지", 1L),
-            new Choice(1L, "호날두", "호날두 이미지", 2L)
-        );
-
-        choiceRepository.saveAll(choices);
 
         Topic topic = Topic.builder()
             .title("메호대전")
@@ -75,16 +71,24 @@ class VoteBatchIntegrationTest {
             .createdAt(timeProvider.getCurrentTime())
             .build();
 
-        topicRepository.save(topic);
+        topicId = topicRepository.save(topic).getId();
 
+
+        Choice choice1 = new Choice(topicId, "메시", "메시 이미지", 1L);
+        Choice choice2 = new Choice(topicId, "호날두", "호날두 이미지", 2L);
+
+        choiceRepository.saveAll(List.of(choice1, choice2));
+
+        choice1Id = choice1.getId();
+        choice2Id = choice2.getId();
     }
 
     @DisplayName("싱글 스레드 일 때 투표 Batch")
     @Test
     void batchWithSingleThread() {
         // given
-        choiceStorage.store(1L, 10);
-        choiceStorage.store(2L, 20);
+        choiceStorage.store(choice1Id, 10);
+        choiceStorage.store(choice2Id, 20);
 
         // when
         voteBatch.processBatchVotes();
@@ -94,9 +98,9 @@ class VoteBatchIntegrationTest {
         entityManager.clear();
 
         // then
-        Choice choice1 = choiceRepository.findById(1L).orElseThrow();
-        Choice choice2 = choiceRepository.findById(2L).orElseThrow();
-        Topic topic = topicRepository.findById(1L).orElseThrow();
+        Choice choice1 = choiceRepository.findById(choice1Id).orElseThrow();
+        Choice choice2 = choiceRepository.findById(choice2Id).orElseThrow();
+        Topic topic = topicRepository.findById(topicId).orElseThrow();
 
         int choice1Count = choice1.getCount();
         int choice2Count = choice2.getCount();
@@ -121,8 +125,8 @@ class VoteBatchIntegrationTest {
 
         for (int i = 0; i < numberOfThreads; i++) {
             tasks.add(() -> {
-                choiceStorage.store(1L, votesForChoice1);
-                choiceStorage.store(2L, votesForChoice2);
+                choiceStorage.store(choice1Id, votesForChoice1);
+                choiceStorage.store(choice2Id, votesForChoice2);
                 return null;
             });
         }
@@ -144,8 +148,8 @@ class VoteBatchIntegrationTest {
         entityManager.clear();
 
         // then
-        Choice choice1 = choiceRepository.findById(1L).orElseThrow();
-        Choice choice2 = choiceRepository.findById(2L).orElseThrow();
+        Choice choice1 = choiceRepository.findById(choice1Id).orElseThrow();
+        Choice choice2 = choiceRepository.findById(choice2Id).orElseThrow();
 
         int choice1Count = choice1.getCount();
         int choice2Count = choice2.getCount();
@@ -159,7 +163,7 @@ class VoteBatchIntegrationTest {
         assertThat(choice1Count).isEqualTo(expectedChoice1Count);
         assertThat(choice2Count).isEqualTo(expectedChoice2Count);
 
-        Topic topic = topicRepository.findById(1L).orElseThrow();
+        Topic topic = topicRepository.findById(topicId).orElseThrow();
         int topicTotalCount = topic.getTotalCount();
 
         // 토픽 총 투표 수

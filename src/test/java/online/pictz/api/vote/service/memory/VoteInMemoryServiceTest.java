@@ -6,17 +6,18 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import java.util.List;
 import java.util.Map;
 import online.pictz.api.vote.dto.VoteRequest;
+import online.pictz.api.vote.service.memory.atmoic.AtomicChoiceStorage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class VoteInMemoryServiceTest {
 
     private VoteInMemoryService voteInMemoryService;
-    private InMemoryChoiceStorage memoryChoiceStorage;
+    private AtomicChoiceStorage memoryChoiceStorage;
 
     @BeforeEach
     void setUp() {
-        memoryChoiceStorage = new InMemoryChoiceStorage();
+        memoryChoiceStorage = new AtomicChoiceStorage();
         voteInMemoryService = new VoteInMemoryService(memoryChoiceStorage);
     }
 

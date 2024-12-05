@@ -10,6 +10,7 @@ import online.pictz.api.choice.repository.ChoiceRepository;
 import online.pictz.api.common.util.time.TimeProvider;
 import online.pictz.api.mock.TestTimeProvider;
 import online.pictz.api.util.TestUtils;
+import online.pictz.api.vote.service.memory.atmoic.AtomicChoiceStorage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -19,7 +20,7 @@ class VoteBatchTest {
 
     private VoteBatch voteBatch;
 
-    private InMemoryChoiceStorage memoryChoiceStorage;
+    private AtomicChoiceStorage memoryChoiceStorage;
 
     @Mock
     private ChoiceRepository choiceRepository;
@@ -32,7 +33,7 @@ class VoteBatchTest {
         MockitoAnnotations.openMocks(this);
 
         TimeProvider timeProvider = new TestTimeProvider(LocalDateTime.of(2024, 1, 1, 1, 1));
-        memoryChoiceStorage = new InMemoryChoiceStorage();
+        memoryChoiceStorage = new AtomicChoiceStorage();
 
         voteBatch = new VoteBatch(
             voteBatchProcessor,

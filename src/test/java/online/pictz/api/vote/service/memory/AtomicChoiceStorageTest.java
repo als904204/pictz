@@ -4,17 +4,18 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 import java.util.List;
 import java.util.Map;
+import online.pictz.api.vote.service.memory.atmoic.AtomicChoiceStorage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class InMemoryChoiceStorageTest {
+class AtomicChoiceStorageTest {
 
-    private InMemoryChoiceStorage inMemoryChoiceStorage;
+    private AtomicChoiceStorage atomicChoiceStorage;
 
     @BeforeEach
     void setUp() {
-        inMemoryChoiceStorage = new InMemoryChoiceStorage();
+        atomicChoiceStorage = new AtomicChoiceStorage();
     }
 
     @Test
@@ -24,10 +25,10 @@ class InMemoryChoiceStorageTest {
         int count = 10;
 
         // when
-        inMemoryChoiceStorage.store(choiceId, count);
+        atomicChoiceStorage.store(choiceId, count);
 
         // then
-        int result = inMemoryChoiceStorage.getCount(choiceId);
+        int result = atomicChoiceStorage.getCount(choiceId);
 
         assertThat(result).isEqualTo(10);
     }
@@ -39,10 +40,10 @@ class InMemoryChoiceStorageTest {
         // given
         Long choiceId = 1L;
         int count = 10;
-        inMemoryChoiceStorage.store(choiceId, count);
+        atomicChoiceStorage.store(choiceId, count);
 
         // when
-        Map<Long, Integer> result = inMemoryChoiceStorage.getAndClearStorage();
+        Map<Long, Integer> result = atomicChoiceStorage.getAndClearStorage();
 
         // then
         assertThat(result.get(choiceId)).isEqualTo(count);
@@ -55,14 +56,14 @@ class InMemoryChoiceStorageTest {
         // given
         Long choiceId = 1L;
         int count = 10;
-        inMemoryChoiceStorage.store(choiceId, count);
+        atomicChoiceStorage.store(choiceId, count);
 
         // when
-        inMemoryChoiceStorage.getAndClearStorage();
+        atomicChoiceStorage.getAndClearStorage();
 
         // then
-        assertThat(inMemoryChoiceStorage.getCount(choiceId)).isEqualTo(0);
-        assertThat(inMemoryChoiceStorage.getCount(choiceId)).isZero();
+        assertThat(atomicChoiceStorage.getCount(choiceId)).isEqualTo(0);
+        assertThat(atomicChoiceStorage.getCount(choiceId)).isZero();
     }
 
     @Test
@@ -74,13 +75,13 @@ class InMemoryChoiceStorageTest {
         Long choiceId2 = 2L;
         int count2 = 20;
 
-        inMemoryChoiceStorage.store(choiceId1, count1);
-        inMemoryChoiceStorage.store(choiceId2, count2);
+        atomicChoiceStorage.store(choiceId1, count1);
+        atomicChoiceStorage.store(choiceId2, count2);
 
         List<Long> choiceIds = List.of(choiceId1, choiceId2);
 
         // when
-        Map<Long, Integer> result = inMemoryChoiceStorage.getCurrentCounts(choiceIds);
+        Map<Long, Integer> result = atomicChoiceStorage.getCurrentCounts(choiceIds);
 
         // then
         Integer choice1Count = result.get(choiceId1);
